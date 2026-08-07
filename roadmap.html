@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WL Stonveil LLC — Dashboard</title>
+<style>
+  :root {
+    --bg-base: #0d0f12;
+    --bg-card: #141720;
+    --bg-card-hover: #191d26;
+    --bg-input: #1c2030;
+    --border: #252a38;
+    --border-light: #2e3547;
+    --text-primary: #e8eaf0;
+    --text-secondary: #8890a4;
+    --text-muted: #5c6478;
+    --accent-blue: #4a8fff;
+    --accent-blue-dim: #1e3a6e;
+    --accent-green: #3ecf8e;
+    --accent-green-dim: #0f3d27;
+    --accent-amber: #f59e0b;
+    --accent-amber-dim: #3d2800;
+    --accent-red: #f87171;
+    --accent-red-dim: #3d1515;
+    --accent-purple: #a78bfa;
+    --accent-purple-dim: #2d1f5e;
+    --phase1: #3ecf8e;
+    --phase2: #4a8fff;
+    --phase3: #f59e0b;
+    --phase4: #f87171;
+    --phase5: #a78bfa;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg-base);
+    color: var(--text-primary);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* ── LAYOUT ── */
+  .app-header {
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    padding: 0 28px;
+    display: flex;
+    align-items: center;
+    height: 60px;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo-badge {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, #4a8fff 0%, #a78bfa 100%);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 13px; color: #fff; flex-shrink: 0;
+  }
+  .header-title { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+  .header-sub { font-size: 12px; color: var(--text-secondary); margin-top: 1px; }
+  .header-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+  .overall-badge {
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    background: var(--accent-blue-dim);
+    color: var(--accent-blue);
+    border: 1px solid var(--accent-blue);
+    white-space: nowrap;
+  }
+  .last-saved { font-size: 11px; color: var(--text-muted); }
+
+  .container { max-width: 1280px; margin: 0 auto; padding: 24px 28px; }
+
+  /* ── STATUS SUMMARY CARDS ── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 16px 18px;
+  }
+  .stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .6px; margin-bottom: 6px; }
+  .stat-value { font-size: 22px; font-weight: 700; color: var(--text-primary); }
+  .stat-sub { font-size: 11px; color: var(--text-secondary); margin-top: 3px; }
+  .stat-accent-green .stat-value { color: var(--accent-green); }
+  .stat-accent-amber .stat-value { color: var(--accent-amber); }
+  .stat-accent-blue  .stat-value { color: var(--accent-blue); }
+  .stat-accent-purple .stat-value { color: var(--accent-purple); }
+
+  /* ── PROGRESS BAR ── */
+  .progress-wrap {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 18px 20px;
+    margin-bottom: 24px;
+  }
+  .progress-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .progress-title { font-size: 13px; font-weight: 600; }
+  .progress-pct { font-size: 13px; font-weight: 700; color: var(--accent-green); }
+  .progress-track {
+    height: 8px; background: var(--bg-input); border-radius: 4px; overflow: hidden;
+    display: flex; gap: 2px;
+  }
+  .progress-seg {
+    height: 100%; border-radius: 2px; transition: width .4s ease;
+  }
+
+  /* ── TWO-COLUMN GRID ── */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 20px;
+    align-items: start;
+  }
+
+  /* ── SECTION HEADERS ── */
+  .section-title {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .8px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── PHASE CARDS ── */
+  .phase-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    margin-bottom: 14px;
+    overflow: hidden;
+    transition: border-color .2s;
+  }
+  .phase-card:hover { border-color: var(--border-light); }
+
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    cursor: pointer;
+    user-select: none;
+    border-left: 3px solid transparent;
+    transition: background .15s;
+  }
+  .phase-header:hover { background: var(--bg-card-hover); }
+
+  .phase-dot {
+    width: 30px; height: 30px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; flex-shrink: 0;
+  }
+  .phase-info { flex: 1; }
+  .phase-name { font-size: 14px; font-weight: 600; }
+  .phase-meta { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+
+  .phase-progress-mini {
+    display: flex; align-items: center; gap: 8px; margin-left: auto;
+  }
+  .mini-bar-track {
+    width: 72px; height: 4px; background: var(--bg-input); border-radius: 2px; overflow: hidden;
+  }
+  .mini-bar-fill { height: 100%; border-radius: 2px; transition: width .3s; }
+  .mini-count { font-size: 11px; color: var(--text-secondary); white-space: nowrap; }
+  .chevron { font-size: 16px; color: var(--text-muted); transition: transform .2s; margin-left: 8px; }
+  .chevron.open { transform: rotate(180deg); }
+
+  .phase-body { display: none; border-top: 1px solid var(--border); }
+  .phase-body.open { display: block; }
+
+  /* Steps */
+  .steps-list { padding: 6px 0; counter-reset: step-counter; }
+  .step-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 18px;
+    border-bottom: 1px solid var(--border);
+    transition: background .1s;
+    counter-increment: step-counter;
+  }
+  .step-row:last-of-type { border-bottom: none; }
+  .step-row:hover { background: var(--bg-card-hover); }
+  .step-num {
+    flex-shrink: 0;
+    width: 28px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-top: 3px;
+    text-align: right;
+  }
+
+  .step-check {
+    width: 18px; height: 18px;
+    border: 2px solid var(--border-light);
+    border-radius: 5px;
+    flex-shrink: 0;
+    cursor: pointer;
+    margin-top: 2px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .15s;
+  }
+  .step-check.done {
+    background: var(--accent-green);
+    border-color: var(--accent-green);
+  }
+  .step-check.done::after {
+    content: '✓';
+    font-size: 11px;
+    font-weight: 800;
+    color: #0d0f12;
+    line-height: 1;
+  }
+
+  .step-text { flex: 1; }
+  .step-label { font-size: 13px; color: var(--text-primary); transition: color .15s; }
+  .step-label.done { color: var(--text-muted); text-decoration: line-through; }
+  .step-detail { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+
+  .step-cost {
+    font-size: 11px; font-weight: 600; white-space: nowrap; padding-left: 8px;
+    margin-top: 2px;
+  }
+  .cost-free   { color: var(--accent-green); }
+  .cost-paid   { color: var(--accent-amber); }
+  .cost-monthly{ color: var(--accent-purple); }
+
+  /* Phase notes */
+  .phase-notes-wrap { padding: 10px 18px; border-top: 1px solid var(--border); background: var(--bg-input); display: flex; align-items: center; gap: 12px; }
+  .phase-notes-preview { flex: 1; font-size: 12px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .phase-notes-preview.has-content { color: var(--text-secondary); }
+  .btn-notes {
+    flex-shrink: 0; padding: 5px 12px; background: var(--bg-card); border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm); color: var(--text-secondary); font-size: 11px; font-weight: 600;
+    cursor: pointer; font-family: inherit; transition: all .15s; white-space: nowrap;
+  }
+  .btn-notes:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+  .btn-notes.has-notes { border-color: var(--accent-amber); color: var(--accent-amber); }
+
+  /* Notes modal */
+  .notes-modal-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,.65);
+    z-index: 300; align-items: center; justify-content: center;
+  }
+  .notes-modal-overlay.open { display: flex; }
+  .notes-modal {
+    background: var(--bg-card); border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg); width: 560px; max-width: 92vw;
+    max-height: 85vh; display: flex; flex-direction: column; overflow: hidden;
+  }
+  .notes-modal-header {
+    padding: 16px 20px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .notes-modal-phase-dot {
+    width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0;
+  }
+  .notes-modal-title { font-size: 14px; font-weight: 700; flex: 1; }
+  .notes-modal-close {
+    width: 28px; height: 28px; border-radius: 6px; background: var(--bg-input);
+    border: 1px solid var(--border); color: var(--text-muted); font-size: 14px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all .15s;
+  }
+  .notes-modal-close:hover { border-color: var(--accent-red); color: var(--accent-red); }
+  .notes-modal-body { flex: 1; padding: 16px 20px; overflow-y: auto; }
+  .notes-modal-textarea {
+    width: 100%; height: 320px; background: var(--bg-input); border: 1px solid var(--border);
+    border-radius: var(--radius-md); color: var(--text-primary); font-size: 13px;
+    font-family: inherit; padding: 14px 16px; outline: none; resize: none; line-height: 1.7;
+    transition: border-color .15s;
+  }
+  .notes-modal-textarea:focus { border-color: var(--accent-blue); }
+  .notes-modal-textarea::placeholder { color: var(--text-muted); }
+  .notes-modal-footer {
+    padding: 12px 20px; border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .notes-char-count { font-size: 11px; color: var(--text-muted); }
+  .notes-modal-actions { display: flex; gap: 8px; }
+  .btn-notes-clear {
+    padding: 7px 14px; background: transparent; border: 1px solid var(--border);
+    border-radius: var(--radius-sm); color: var(--text-muted); font-size: 12px;
+    cursor: pointer; font-family: inherit; transition: all .15s;
+  }
+  .btn-notes-clear:hover { border-color: var(--accent-red); color: var(--accent-red); }
+  .btn-notes-save {
+    padding: 7px 18px; background: var(--accent-blue); border: none;
+    border-radius: var(--radius-sm); color: #fff; font-size: 12px; font-weight: 600;
+    cursor: pointer; font-family: inherit; transition: opacity .15s;
+  }
+  .btn-notes-save:hover { opacity: .85; }
+
+  /* ── RIGHT PANEL ── */
+  .side-panel { display: flex; flex-direction: column; gap: 16px; }
+
+  /* Decisions */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 18px;
+  }
+  .card-title { font-size: 13px; font-weight: 700; margin-bottom: 14px; color: var(--text-primary); }
+  .decision-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .decision-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .decision-icon {
+    width: 28px; height: 28px; border-radius: 6px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 13px;
+  }
+  .decision-text .d-label { font-size: 12px; color: var(--text-secondary); }
+  .decision-text .d-value { font-size: 13px; font-weight: 600; color: var(--text-primary); margin-top: 1px; }
+
+  /* Cost Tracker */
+  .cost-table { width: 100%; border-collapse: collapse; }
+  .cost-table thead th {
+    font-size: 10px; text-transform: uppercase; letter-spacing: .5px;
+    color: var(--text-muted); padding: 0 0 8px; text-align: left; border-bottom: 1px solid var(--border);
+  }
+  .cost-table thead th:last-child { text-align: right; }
+  .cost-table tbody td {
+    padding: 8px 0; font-size: 12px; border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .cost-table tbody tr:last-child td { border-bottom: none; }
+  .cost-table td:first-child { color: var(--text-primary); }
+  .cost-table td:nth-child(2) { color: var(--text-secondary); padding-left: 8px; }
+  .cost-table td:nth-child(3) { text-align: right; font-weight: 600; padding-left: 8px; }
+  .amount-budget { color: var(--text-secondary); }
+  .amount-spent  { color: var(--accent-green); }
+  .amount-pending{ color: var(--accent-amber); }
+
+  .cost-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border);
+  }
+  .cost-total-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; }
+  .cost-total-val { font-size: 14px; font-weight: 700; }
+
+  .cost-input-row { display: flex; gap: 8px; margin-top: 10px; }
+  .cost-input {
+    flex: 1; background: var(--bg-input); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); color: var(--text-primary); font-size: 12px;
+    padding: 6px 10px; outline: none; font-family: inherit;
+    transition: border-color .15s;
+  }
+  .cost-input:focus { border-color: var(--accent-blue); }
+  .cost-input::placeholder { color: var(--text-muted); }
+  .btn-add {
+    padding: 6px 14px; background: var(--accent-blue); color: #fff;
+    border: none; border-radius: var(--radius-sm); font-size: 12px; font-weight: 600;
+    cursor: pointer; white-space: nowrap; transition: opacity .15s;
+  }
+  .btn-add:hover { opacity: .85; }
+
+  /* Contacts */
+  .contact-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 8px 0; border-bottom: 1px solid var(--border);
+  }
+  .contact-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .contact-icon {
+    width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 14px;
+  }
+  .contact-text .c-role { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; }
+  .contact-text .c-name { font-size: 13px; font-weight: 600; color: var(--text-primary); margin-top: 1px; }
+  .contact-text .c-note { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+  .contact-status {
+    margin-left: auto; font-size: 10px; font-weight: 600;
+    padding: 2px 8px; border-radius: 10px; white-space: nowrap; align-self: center;
+  }
+  .status-active   { background: var(--accent-green-dim); color: var(--accent-green); }
+  .status-pending  { background: var(--accent-amber-dim); color: var(--accent-amber); }
+  .status-none     { background: var(--bg-input);         color: var(--text-muted); }
+
+  /* Editable contact notes */
+  .contact-notes-input {
+    background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    color: var(--text-secondary); font-size: 11px; font-family: inherit;
+    padding: 6px 8px; margin-top: 6px; width: 100%; outline: none; resize: none;
+    transition: border-color .15s;
+  }
+  .contact-notes-input:focus { border-color: var(--accent-blue); }
+  .contact-notes-input::placeholder { color: var(--text-muted); }
+
+  /* Add contact */
+  .add-contact-btn {
+    width: 100%; margin-top: 10px; padding: 8px;
+    background: var(--bg-input); border: 1px dashed var(--border-light);
+    border-radius: var(--radius-sm); color: var(--text-muted); font-size: 12px;
+    cursor: pointer; transition: all .15s; font-family: inherit;
+  }
+  .add-contact-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+
+  /* Modal */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6);
+    z-index: 200; align-items: center; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--bg-card); border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg); padding: 24px; width: 380px; max-width: 90vw;
+  }
+  .modal-title { font-size: 14px; font-weight: 700; margin-bottom: 16px; }
+  .modal-field { margin-bottom: 12px; }
+  .modal-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+  .modal-input {
+    width: 100%; background: var(--bg-input); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); color: var(--text-primary); font-size: 13px;
+    padding: 8px 10px; outline: none; font-family: inherit; transition: border-color .15s;
+  }
+  .modal-input:focus { border-color: var(--accent-blue); }
+  .modal-select {
+    width: 100%; background: var(--bg-input); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); color: var(--text-primary); font-size: 13px;
+    padding: 8px 10px; outline: none; font-family: inherit; cursor: pointer;
+    appearance: none;
+  }
+  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px; }
+  .btn-cancel {
+    padding: 7px 16px; background: var(--bg-input); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); color: var(--text-secondary); font-size: 13px;
+    cursor: pointer; font-family: inherit;
+  }
+  .btn-save {
+    padding: 7px 18px; background: var(--accent-blue); border: none;
+    border-radius: var(--radius-sm); color: #fff; font-size: 13px; font-weight: 600;
+    cursor: pointer; font-family: inherit; transition: opacity .15s;
+  }
+  .btn-save:hover { opacity: .85; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .main-grid { grid-template-columns: 1fr; }
+    .container { padding: 16px; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* Tooltips / tags */
+  .tag {
+    display: inline-block; padding: 2px 8px; border-radius: 10px;
+    font-size: 10px; font-weight: 600; letter-spacing: .3px;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<header class="app-header">
+  <div class="logo-badge">WL</div>
+  <div>
+    <div class="header-title">WL Stonveil LLC</div>
+    <div class="header-sub">Amazon FBA Wholesale · Florida · SmartScout</div>
+  </div>
+  <div class="header-right">
+    <div class="overall-badge" id="overallBadge">Cargando...</div>
+    <div class="last-saved" id="lastSaved"></div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- ══ STAT CARDS ══ -->
+  <div class="stats-row">
+    <div class="stat-card stat-accent-green">
+      <div class="stat-label">Pasos completados</div>
+      <div class="stat-value" id="statDone">0</div>
+      <div class="stat-sub" id="statTotal">de 0 pasos totales</div>
+    </div>
+    <div class="stat-card stat-accent-amber">
+      <div class="stat-label">Gasto real acumulado</div>
+      <div class="stat-value" id="statSpent">$0</div>
+      <div class="stat-sub" id="statBudget">presupuestado</div>
+    </div>
+    <div class="stat-card stat-accent-blue">
+      <div class="stat-label">Fase actual</div>
+      <div class="stat-value" id="statPhase">—</div>
+      <div class="stat-sub" id="statPhaseDetail">en progreso</div>
+    </div>
+    <div class="stat-card stat-accent-purple">
+      <div class="stat-label">Estado global</div>
+      <div class="stat-value" id="statPct">0%</div>
+      <div class="stat-sub">completado</div>
+    </div>
+  </div>
+
+  <!-- ══ PROGRESS BAR ══ -->
+  <div class="progress-wrap">
+    <div class="progress-header">
+      <span class="progress-title">Progreso general del proyecto</span>
+      <span class="progress-pct" id="progressPct">0%</span>
+    </div>
+    <div class="progress-track" id="progressTrack">
+      <div class="progress-seg" id="seg1" style="background:var(--phase1);width:0%"></div>
+      <div class="progress-seg" id="seg2" style="background:var(--phase2);width:0%"></div>
+      <div class="progress-seg" id="seg3" style="background:var(--phase3);width:0%"></div>
+      <div class="progress-seg" id="seg4" style="background:var(--phase4);width:0%"></div>
+      <div class="progress-seg" id="seg5" style="background:var(--phase5);width:0%"></div>
+    </div>
+  </div>
+
+  <!-- ══ MAIN GRID ══ -->
+  <div class="main-grid">
+
+    <!-- LEFT: ROADMAP PHASES -->
+    <div>
+      <div class="section-title">Roadmap de fases</div>
+
+      <!-- ─ FASE 1 ─ -->
+      <div class="phase-card" id="phase-card-0">
+        <div class="phase-header" style="border-left-color:var(--phase1)" onclick="togglePhase(0)">
+          <div class="phase-dot" style="background:rgba(62,207,142,.15);color:var(--phase1)">1</div>
+          <div class="phase-info">
+            <div class="phase-name">Registrar la LLC en Florida</div>
+            <div class="phase-meta">Semana 1 — ~1–3 días hábiles</div>
+          </div>
+          <div class="phase-progress-mini">
+            <div class="mini-bar-track"><div class="mini-bar-fill" id="mini0" style="background:var(--phase1);width:0%"></div></div>
+            <div class="mini-count" id="mini-count0">0/6</div>
+          </div>
+          <span class="chevron" id="chev0">▾</span>
+        </div>
+        <div class="phase-body open" id="body0">
+          <div class="steps-list">
+            <div class="step-row">
+              <div class="step-check" onclick="toggleStep(0,0)" id="chk-0-0"></div>
+              <div class="step-text">
+                <div class="step-label" id="lbl-0-0">Elegir nombre de la empresa</div>
+                <div class="step-detail">Verificar disponibilidad en Florida Division of Corporations (sunbiz.org)</div>
+              </div>
+              <div class="step-cost cost-free">Gratis</div>
+            </div>
+            <div class="step-row">
+              <div class="step-check" onclick="toggleStep(0,1)" id="chk-0-1"></div>
+              <div class="step-text">
+                <div class="step-label" id="lbl-0-1">Contratar Registered Agent — Bizee</div>
+                <div class="step-detail">Bizee Plan Estándar: $324 total ($199 Bizee + $125 fee Florida). Incluye RA 1er año gratis, Articles of Organization, Operating Agreement y gestión del EIN. Año 2 en adelante: $119/año de RA.</div>
+              </div>
+              <div class="step-cost cost-paid">$303 (1er año)</div>
+            </div>
+            <div class="step-row">
+              <div class="step-check" onclick="toggleStep(0,2)" id="chk-0-2"></div>
+              <div class="step-text">
+                <div class="step-label" id="lbl-0-2">Filing online: Articles of Organization</div>
+                <div class="step-detail">Bizee lo presenta por ti en sunbiz.org — incluido en el Plan Estándar. Aprobación en 1–3 días hábiles.</div>
+              </div>
+              <div class="step-cost cost-paid">Incluido Bizee</div>
+            </div>
+            <div class="step-row">
+              <div class="step-check" onclick="toggleStep(0,3)" id="chk-0-3"></div>
+              <div class="step-text">
+                <div class="step-label" id="lbl-0-3">Redactar Operating Agreement</div>
+                <div class="step-detail">Incluido en el Plan Estándar de Bizee. Solicitar estructura Manager-Managed: Wilson como Member (dueño) y esposa como Manager designada.</div>
+              </div>
+              <div class="step-cost cost-free">Incluido Bizee</div>
+            </div>
+            <div class="step-row">
+              <div class="step-check" onclick="toggleStep(0,4)" id="chk-0-4"></div>
+              <div class="step-text">
+                <div class="step-label" id="lbl-0-4">Obtener número de teléfono comercial EE.UU. (+1)</div>
+                <div class="step-detail">Amazon y bancos requieren un número +1. Opciones: Google Voice (gratis), OpenPhone ($13/mes), Grasshopper ($26/mes). IMPORTANTE: usar este número exactamente igual en todos los formularios (Amazon, banco, IRS).</div>
+              </div>
+              <div class="step-cost cost-free">Gratis–$26/mes</div>
+            </div>
+            <div class="step-row">
+              <div class="step-check" onclick="toggleStep(0,5)" id="chk-0-5"></div>
+              <div class="step-text">
+                <div class="step-label" id="lbl-0-5">Obtener dirección comercial física (Virtual Mailbox)</div>
+                <div class="step-detail">Dirección física real en EE.UU. para usar en Amazon, bancos y formularios. Diferente a la del RA. ✅ Bizee Plan Estándar incluye Virtual Address gratis el 1er mes — aprovéchalo para los primeros registros. Mes 2 en adelante: contratar servicio externo más económico: Anytime Mailbox, PostScan Mail o iPostal1 (~$10–$15/mes). IMPORTANTE: usar esta dirección exactamente igual en todos los formularios.</div>
+              </div>
+              <div class="step-cost cost-paid">$10–$20/mes</div>
+            </div>
+          </div>
+          <div class="phase-notes-wrap">
+            <div class="phase-notes-preview" id="notes-preview0">Sin notas aún...</div>
+            <button class="btn-notes" id="btn-notes0" onclick="openNotesModal(0)">📝 Notas</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─ FASE 2 ─ -->
+      <div class="phase-card" id="phase-card-1">
+        <div class="phase-header" style="border-left-color:var(--phase2)" onclick="togglePhase(1)">
+          <div class="phase-dot" style="background:rgba(74,143,255,.15);color:var(--phase2)">2</div>
+          <div class="phase-info">
+            <div class="phase-name">Obtener EIN del IRS</div>
+            <div class="phase-meta">Semanas 1–4 (depende del método)</div>
+          </div>
+          <div class="phase-progress-mini">
+            <div class="mini-bar-track"><div class="mini-bar-fill" id="mini1" style="background:var(--phase2);width:0%"></div></div>
+            <div class="mini-count" id="mini-count1">0/3</div>
+          </div>
+          <span class="chevron" id="chev1">▾</span>
+        </div>
+        <div class="phase-body" id="body1">
+          <div class="steps-list">
+            <div class="step-row">
+              <div class="step-check" onclick="toggleStep(1,0)" id="chk-1-0"></div>
+              <div class="step-text">
+                <div class="step-label" id="lbl-1-0">Completar Formulario SS-4 del IRS</div>
+                <div class="step-detail">Bizee gestiona el SS-4 por ti — incluido en el Plan Estándar. Sin Bizee: fax al IRS 855-641-6935. El SS-4 solicita el EIN, NO abre la LLC (eso ya lo hizo Bizee en Fase 1). El formulario pide un código NAICS — usar 454110 (Electronic Shopping & Mail-Order, el más común para FBA). El curso recomienda 455219 (All Other General Merchandise Retailers) o 541613 (Marketing Consulting). Confirmar con CPA cuál aplica mejor a tu modelo.</div>
+              </div>
+              <div class="step-cost cost-free">Incluido Bizee</div>
+            </div>
+            <div class="step-row">
+              <div class="step-check" onclick="toggleStep(1,1)" id="chk-1-1"></div>
+              <div class="step-text">
+                <div class="step-label" id="lbl-1-1">Espera de procesamiento</div>
+                <div class="step-detail">Por fax: 4–8 semanas. Con servicio de formación: ~2 semanas.</div>
+              </div>
+              <div class="step-cost cost-paid">$0–$200 con servicio</div>
+            </div>
+            <div class="step-row">
+              <div class="step-check" onclick="toggleStep(1,2)" id="chk-1-2"></div>
+              <div class="step-text">
+                <div class="step-label" id="lbl-1-2">Recibir EIN Confirmation Letter</div>
+                <div class="step-detail">Documento indispensable para abrir cuenta bancaria y registrarse en Amazon.</div>
+              </div>
+              <div class="step-cost cost-free">—</div>
+            </div>
+          </div>
+          <div class="phase-notes-wrap">
+            <div class="phase-notes-preview" id="notes-preview1">Sin notas aún...</div>
+            <button class="btn-notes" id="btn-notes1" onclick="openNotesModal(1)">📝 Notas</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─ FASE 3 ─ -->
+      <div class="phase-card" id="phase-card-2">
+        <div class="phase-header" style="border-left-color:var(--phase3)" onclick="togglePhase(2)">
+          <div class="phase-dot" style="background:rgba(245,158,11,.15);color:var(--phase3)">3</div>
+          <div class="phase-info">
+            <div class="phase-name">Abrir cuenta bancaria en EE.UU.</div>
+            <div class="phase-meta">Semanas 4–6 — 1–5 días tras tener EIN</div>
+          </div>
+          <div class="phase-progress-mini">
+            <div class="mini-bar-track"><div class="mini-bar-fill" id="mini2" style="background:var(--phase3);width:0%"></div></div>
+            <div class="mini-count" id="mini-count2">0/3</div>
+          </div>
+          <span class="chevron" id="chev2">▾</span>
+        </div>
+        <div class="phase-body" id="body2">
+          <div class="steps-list">
+            <div class="step-row">
+              <div class="step-check" onclick="toggleStep(2,0)" id="chk-2-0"></div>
+              <div class="step-text">
+                <div class="step-label" id="lbl-2-0">Primera opción: Wise Business o Relay</div>
+                <div class="step-detail">En 2025 Mercury endureció requisitos para no residentes. Wise y Relay tienen mayor tasa de aprobación.</div>
+              </div>
+              <div class="step-cost cost-free">Gratis</div>
+            </div>
+            <div class="step-row">
+              <div class="step-check" onclick="toggleStep(2,1)" id="chk-2-1"></div>
+              <div class="step-text">
+                <div class="step-label" id="lbl-2-1">Segunda opción: Mercury o Airwallex (respaldo)</div>
+                <div class="step-detail">Tener 2 cuentas es buena práctica para Amazon FBA.</div>
+              </div>
+              <div class="step-cost cost-free">Gratis</div>
+            </div>
+            <div class="step-row">
+              <div class="step-check" onclick="toggleStep(2,2)" id="chk-2-2"></div>
+              <div class="step-text">
+                <div class="step-label" id="lbl-2-2">Reunir documentos requeridos</div>
+                <div class="step-detail">Articles of Organization + EIN Letter + Pasaporte vigente + Dirección del Registered Agent.</div>
+              </div>
+              <div class="step-cost cost-free">—</div>
+            </div>
+          </div>
+          <div class="phase-notes-wrap">
+            <div class="phase-notes-preview" id="notes-preview2">Sin notas aún...</div>
+            <button class="btn-notes" id="btn-notes2" onclick="openNotesModal(2)">📝 Notas</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─ FASE 4 ─ -->
+      <div class="phase-card" id="phase-card-3">
+        <div class="phase-header" style="border-left-color:var(--phase4)" onclick="togglePhase(3)">
+          <div class="phase-dot" style="background:rgba(248,113,113,.15);color:var(--phase4)">4</div>
+          <div class="phase-info">
+            <div class="phase-name">Registrar Amazon Seller Central</div>
+            <div class="phase-meta">Semanas 6–8</div>
+          </div>
+          <div class="phase-progress-mini">
+            <div class="mini-bar-track"><div class="mini-bar-fill" id="mini3" style="background:var(--phase4);width:0%"></div></div>
+            <div class="mini-count" id="mini-count3">0/5</div>
+          </div>
+          <span class="chevron" id="chev3">▾</span>
+        </div>
+        <div class="phase-body" id="body3">
+          <div class="steps-list">
+            <div class="step-row">
+              <div class="step-check" onclick="toggleStep(3,0)" id="chk-3-0"></div>
+              <div class="step-text">
+                <div class="step-label" id="lbl-3-0">Crear cuenta en Seller Central</div>
+                <div class="step-detail">Usar nombre y dirección de la LLC. Amazon pedirá verificación de identidad (pasaporte).</div>
+              </div>
+              <div class="step-cost cost-monthly">$39.99/mes</div>
+            </div>
+            <div class="step-row">
+              <div class="step-check" onclick="toggleStep(3,1)" id="chk-3-1"></div>
+              <div class="step-text">
+                <div class="step-label" id="lbl-3-1">Conectar cuenta bancaria</div>
+                <div class="step-detail">Enlazar cuenta Wise/Relay/Mercury como método de depósito de Amazon.</div>
+              </div>
+              <div class="step-cost cost-free">—</div>
+            </div>
+            <div class="step-row">
+              <div class="step-check" onclick="toggleStep(3,2)" id="chk-3-2"></div>
+              <div class="step-text">
+                <div class="step-label" id="lbl-3-2">Completar verificación fiscal W-8BEN</div>
+                <div class="step-detail">Obligatorio para no residentes. Evita retención del 30% sobre tus pagos.</div>
+              </div>
+              <div class="step-cost cost-free">Gratis</div>
+            </div>
+            <div class="step-row">
+              <div class="step-check" onclick="toggleStep(3,3)" id="chk-3-3"></div>
+              <div class="step-text">
+                <div class="step-label" id="lbl-3-3">Obtener Florida Resale Certificate</div>
+                <div class="step-detail">Solicitar en el portal de Florida Department of Revenue (floridarevenue.com). Gratis e inmediato. Los proveedores mayoristas lo exigen para abrir cuenta. Aplica porque el Prep Center opera en Florida.</div>
+              </div>
+              <div class="step-cost cost-free">Gratis</div>
+            </div>
+            <div class="step-row">
+              <div class="step-check" onclick="toggleStep(3,4)" id="chk-3-4"></div>
+              <div class="step-text">
+                <div class="step-label" id="lbl-3-4">Contratar Prep Center en Florida (tentativo)</div>
+                <div class="step-detail">El Prep Center recibe, inspecciona, etiqueta y envía tu inventario a los warehouses de Amazon. Florida: sin Sales Tax, muchos sellers latinos, puertos activos. Opciones recomendadas: Prep It Pack It Ship It (Miami), FBA Prep USA (Orlando), ShipBob (Tampa). Costo aprox: $0.50–$1.50 por unidad + almacenamiento.</div>
+              </div>
+              <div class="step-cost cost-paid">$0.50–$1.50/u</div>
+            </div>
+          </div>
+          <div class="phase-notes-wrap">
+            <div class="phase-notes-preview" id="notes-preview3">Sin notas aún...</div>
+            <button class="btn-notes" id="btn-notes3" onclick="openNotesModal(3)">📝 Notas</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─ FASE 5 ─ -->
+      <div class="phase-card" id="phase-card-4">
+        <div class="phase-header" style="border-left-color:var(--phase5)" onclick="togglePhase(4)">
+          <div class="phase-dot" style="background:rgba(167,139,250,.15);color:var(--phase5)">5</div>
+          <div class="phase-info">
+            <div class="phase-name">Cumplimiento anual (ongoing)</div>
+            <div class="phase-meta">Cada año — renovaciones y declaraciones</div>
+          </div>
+          <div class="phase-progress-mini">
+            <div class="mini-bar-track"><div class="mini-bar-fill" id="mini4" style="background:var(--phase5);width:0%"></div></div>
+            <div class="mini-count" id="mini-count4">0/3</div>
+          </div>
+          <span class="chevron" id="chev4">▾</span>
+        </div>
+        <div class="phase-body" id="body4">
+          <div class="steps-list">
+            <div class="step-row">
+              <div class="step-check" onclick="toggleStep(4,0)" id="chk-4-0"></div>
+              <div class="step-text">
+                <div class="step-label" id="lbl-4-0">Florida Annual Report</div>
+                <div class="step-detail">Lo haces tú mismo en sunbiz.org — toma 10 minutos. Presentar cada año antes del 1 de mayo. Bizee también lo puede hacer por ti por ~$100 adicional.</div>
+              </div>
+              <div class="step-cost cost-paid">$60/año</div>
+            </div>
+            <div class="step-row">
+              <div class="step-check" onclick="toggleStep(4,1)" id="chk-4-1"></div>
+              <div class="step-text">
+                <div class="step-label" id="lbl-4-1">Form 5472 + 1120 (IRS)</div>
+                <div class="step-detail">Obligatorio para LLCs de propiedad extranjera. Multa de $25,000 si no se presenta. Requiere CPA.</div>
+              </div>
+              <div class="step-cost cost-paid">$300–$800 CPA/año</div>
+            </div>
+            <div class="step-row">
+              <div class="step-check" onclick="toggleStep(4,2)" id="chk-4-2"></div>
+              <div class="step-text">
+                <div class="step-label" id="lbl-4-2">Renovar Registered Agent — Bizee</div>
+                <div class="step-detail">Renovación anual automática con Bizee. A partir del año 2 el costo de RA es $119/año. Bizee envía recordatorio por email antes del vencimiento.</div>
+              </div>
+              <div class="step-cost cost-paid">$119/año</div>
+            </div>
+          </div>
+          <div class="phase-notes-wrap">
+            <div class="phase-notes-preview" id="notes-preview4">Sin notas aún...</div>
+            <button class="btn-notes" id="btn-notes4" onclick="openNotesModal(4)">📝 Notas</button>
+          </div>
+        </div>
+      </div>
+    </div><!-- /left -->
+
+    <!-- RIGHT PANEL -->
+    <div class="side-panel">
+
+      <!-- DECISIONES CLAVE -->
+      <div class="card">
+        <div class="card-title">Decisiones clave tomadas</div>
+        <div class="decision-item">
+          <div class="decision-icon" style="background:rgba(74,143,255,.12)">🏢</div>
+          <div class="decision-text">
+            <div class="d-label">Nombre de la LLC</div>
+            <div class="d-value">WL Stonveil LLC</div>
+          </div>
+        </div>
+        <div class="decision-item">
+          <div class="decision-icon" style="background:rgba(62,207,142,.12)">📍</div>
+          <div class="decision-text">
+            <div class="d-label">Estado de registro</div>
+            <div class="d-value">Florida</div>
+          </div>
+        </div>
+        <div class="decision-item">
+          <div class="decision-icon" style="background:rgba(245,158,11,.12)">📦</div>
+          <div class="decision-text">
+            <div class="d-label">Modelo de negocio</div>
+            <div class="d-value">Amazon FBA Wholesale</div>
+          </div>
+        </div>
+        <div class="decision-item">
+          <div class="decision-icon" style="background:rgba(167,139,250,.12)">🔍</div>
+          <div class="decision-text">
+            <div class="d-label">Herramienta de investigación</div>
+            <div class="d-value">SmartScout</div>
+          </div>
+        </div>
+        <div class="decision-item">
+          <div class="decision-icon" style="background:rgba(248,113,113,.12)">🌍</div>
+          <div class="decision-text">
+            <div class="d-label">País base del fundador</div>
+            <div class="d-value">Colombia</div>
+          </div>
+        </div>
+        <div class="decision-item">
+          <div class="decision-icon" style="background:rgba(99,102,241,.12)">🏷️</div>
+          <div class="decision-text">
+            <div class="d-label">Código NAICS</div>
+            <div class="d-value">455219 · 541613 · 454110</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TRACKER DE COSTOS -->
+      <div class="card">
+        <div class="card-title">Tracker de costos (USD)</div>
+        <table class="cost-table">
+          <thead>
+            <tr>
+              <th>Concepto</th>
+              <th>Presup.</th>
+              <th>Real</th>
+            </tr>
+          </thead>
+          <tbody id="costTableBody">
+            <!-- rows injected by JS -->
+          </tbody>
+        </table>
+        <div class="cost-footer" style="flex-direction:column;gap:6px;align-items:stretch;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span class="cost-total-label">Presupuesto estimado</span>
+            <span class="cost-total-val" id="totalBudget" style="color:var(--text-muted)">$0</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span class="cost-total-label">Total gastado</span>
+            <span class="cost-total-val" id="totalSpent">$0</span>
+          </div>
+        </div>
+        <div class="cost-input-row" style="margin-top:14px;flex-direction:column;gap:6px;">
+          <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Registrar gasto real</div>
+          <div class="cost-input-row">
+            <select class="cost-input" id="costConcept" style="flex:2">
+              <option value="">— Seleccionar concepto —</option>
+              <option value="0">Registered Agent</option>
+              <option value="1">Articles of Organization (Florida)</option>
+              <option value="2">EIN (servicio)</option>
+              <option value="3">Amazon Seller Central</option>
+              <option value="4">Florida Annual Report</option>
+              <option value="5">CPA / Form 5472</option>
+              <option value="6">Otros</option>
+            </select>
+          </div>
+          <div class="cost-input-row">
+            <input class="cost-input" id="costAmount" type="number" min="0" placeholder="Monto ($)" />
+            <button class="btn-add" onclick="addSpent()">+ Añadir</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTACTOS Y PROVEEDORES -->
+      <div class="card">
+        <div class="card-title">Contactos y proveedores</div>
+        <div id="contactsList">
+          <!-- injected by JS -->
+        </div>
+        <button class="add-contact-btn" onclick="openContactModal()">+ Añadir contacto / proveedor</button>
+      </div>
+
+    </div><!-- /side-panel -->
+  </div><!-- /main-grid -->
+</div>
+
+<!-- MODAL: Notas de fase -->
+<div class="notes-modal-overlay" id="notesModal">
+  <div class="notes-modal">
+    <div class="notes-modal-header">
+      <div class="notes-modal-phase-dot" id="notesModalDot"></div>
+      <div class="notes-modal-title" id="notesModalTitle">Notas</div>
+      <button class="notes-modal-close" onclick="closeNotesModal()">✕</button>
+    </div>
+    <div class="notes-modal-body">
+      <textarea class="notes-modal-textarea" id="notesModalTextarea" placeholder="Escribe aquí tus notas, decisiones, pendientes o cualquier información relevante para esta fase..."></textarea>
+    </div>
+    <div class="notes-modal-footer">
+      <span class="notes-char-count" id="notesCharCount">0 caracteres</span>
+      <div class="notes-modal-actions">
+        <button class="btn-notes-clear" onclick="clearNotes()">Limpiar</button>
+        <button class="btn-notes-save" onclick="saveNotes()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Nuevo Contacto -->
+<div class="modal-overlay" id="contactModal">
+  <div class="modal">
+    <div class="modal-title">Nuevo contacto / proveedor</div>
+    <div class="modal-field">
+      <div class="modal-label">Rol</div>
+      <select class="modal-select" id="mRole">
+        <option value="Registered Agent">Registered Agent</option>
+        <option value="Banco / Fintech">Banco / Fintech</option>
+        <option value="Prep Center">Prep Center</option>
+        <option value="Proveedor mayorista">Proveedor mayorista</option>
+        <option value="CPA / Contador">CPA / Contador</option>
+        <option value="Abogado">Abogado</option>
+        <option value="Otro">Otro</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <div class="modal-label">Nombre</div>
+      <input class="modal-input" id="mName" type="text" placeholder="Ej: Northwest Registered Agents" />
+    </div>
+    <div class="modal-field">
+      <div class="modal-label">Nota / detalle</div>
+      <input class="modal-input" id="mNote" type="text" placeholder="Ej: $50/año, aprobado 2025" />
+    </div>
+    <div class="modal-field">
+      <div class="modal-label">Estado</div>
+      <select class="modal-select" id="mStatus">
+        <option value="active">Activo / Contratado</option>
+        <option value="pending">Pendiente</option>
+        <option value="none">Sin definir</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeContactModal()">Cancelar</button>
+      <button class="btn-save" onclick="saveContact()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════
+const PHASES = [
+  { steps: 6 },
+  { steps: 3 },
+  { steps: 3 },
+  { steps: 5 },
+  { steps: 3 },
+];
+const TOTAL_STEPS = PHASES.reduce((s, p) => s + p.steps, 0);
+
+const COST_ROWS = [
+  { label: 'Registered Agent',             budget: 87.50  },
+  { label: 'Articles of Organization',     budget: 125    },
+  { label: 'EIN (servicio opcional)',       budget: 100    },
+  { label: 'Amazon Seller Central',        budget: 39.99  },
+  { label: 'Florida Annual Report',        budget: 138    },
+  { label: 'CPA / Form 5472',             budget: 550    },
+  { label: 'Otros',                        budget: 100    },
+];
+
+const CONTACT_ICONS = {
+  'Registered Agent':   { icon: '🏛️', bg: 'rgba(74,143,255,.15)' },
+  'Banco / Fintech':    { icon: '🏦', bg: 'rgba(62,207,142,.15)' },
+  'Prep Center':        { icon: '📦', bg: 'rgba(245,158,11,.15)' },
+  'Proveedor mayorista':{ icon: '🏭', bg: 'rgba(248,113,113,.15)' },
+  'CPA / Contador':     { icon: '🧮', bg: 'rgba(167,139,250,.15)' },
+  'Abogado':            { icon: '⚖️', bg: 'rgba(167,139,250,.15)' },
+  'Otro':               { icon: '📋', bg: 'rgba(92,100,120,.25)' },
+};
+
+// ── Load / default state ──
+let state = JSON.parse(localStorage.getItem('wlstonveil_v2') || 'null') || {
+  checks: Array(5).fill(null).map((_, i) => Array(PHASES[i].steps).fill(false)),
+  notes: Array(5).fill(''),
+  phaseOpen: [true, false, false, false, false],
+  costs: COST_ROWS.map(() => 0),
+  contacts: [],
+};
+// Migración: asegurar que cada fase tenga el número correcto de pasos
+PHASES.forEach((phase, i) => {
+  if (!state.checks[i]) state.checks[i] = [];
+  while (state.checks[i].length < phase.steps) state.checks[i].push(false);
+});
+
+// ══════════════════════════════════════════════
+//  PERSIST
+// ══════════════════════════════════════════════
+function save() {
+  localStorage.setItem('wlstonveil_v2', JSON.stringify(state));
+  const now = new Date();
+  document.getElementById('lastSaved').textContent =
+    'Guardado ' + now.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
+}
+
+// ══════════════════════════════════════════════
+//  TOGGLE STEP
+// ══════════════════════════════════════════════
+function toggleStep(phase, step) {
+  state.checks[phase][step] = !state.checks[phase][step];
+  renderStep(phase, step);
+  renderMini(phase);
+  renderProgress();
+  renderStats();
+  save();
+}
+
+function renderStep(p, s) {
+  const done = state.checks[p][s];
+  const chk = document.getElementById(`chk-${p}-${s}`);
+  const lbl = document.getElementById(`lbl-${p}-${s}`);
+  chk.className = 'step-check' + (done ? ' done' : '');
+  lbl.className = 'step-label' + (done ? ' done' : '');
+}
+
+// ══════════════════════════════════════════════
+//  TOGGLE PHASE OPEN/CLOSE
+// ══════════════════════════════════════════════
+function togglePhase(p) {
+  state.phaseOpen[p] = !state.phaseOpen[p];
+  applyPhaseOpen(p);
+  save();
+}
+
+function applyPhaseOpen(p) {
+  const body = document.getElementById(`body${p}`);
+  const chev = document.getElementById(`chev${p}`);
+  if (state.phaseOpen[p]) {
+    body.classList.add('open');
+    chev.classList.add('open');
+  } else {
+    body.classList.remove('open');
+    chev.classList.remove('open');
+  }
+}
+
+// ══════════════════════════════════════════════
+//  MINI PROGRESS BARS
+// ══════════════════════════════════════════════
+function renderMini(p) {
+  const done = state.checks[p].filter(Boolean).length;
+  const total = PHASES[p].steps;
+  const pct = total ? (done / total * 100) : 0;
+  document.getElementById(`mini${p}`).style.width = pct + '%';
+  document.getElementById(`mini-count${p}`).textContent = `${done}/${total}`;
+}
+
+// ══════════════════════════════════════════════
+//  GLOBAL PROGRESS BAR
+// ══════════════════════════════════════════════
+function renderProgress() {
+  const totalDone = state.checks.flat().filter(Boolean).length;
+  const pct = Math.round(totalDone / TOTAL_STEPS * 100);
+  document.getElementById('progressPct').textContent = pct + '%';
+  // Segment widths: each phase's contribution to total
+  state.checks.forEach((arr, p) => {
+    const phasePct = (arr.filter(Boolean).length / TOTAL_STEPS * 100).toFixed(1);
+    document.getElementById(`seg${p+1}`).style.width = phasePct + '%';
+  });
+}
+
+// ══════════════════════════════════════════════
+//  STATS
+// ══════════════════════════════════════════════
+function renderStats() {
+  const totalDone = state.checks.flat().filter(Boolean).length;
+  const pct = Math.round(totalDone / TOTAL_STEPS * 100);
+  document.getElementById('statDone').textContent = totalDone;
+  document.getElementById('statTotal').textContent = `de ${TOTAL_STEPS} pasos totales`;
+  document.getElementById('statPct').textContent = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+
+  // Current phase
+  let currentPhase = 5;
+  for (let p = 0; p < 5; p++) {
+    const done = state.checks[p].filter(Boolean).length;
+    if (done < PHASES[p].steps) { currentPhase = p + 1; break; }
+  }
+  const phaseNames = ['LLC Florida', 'EIN IRS', 'Cuenta bancaria', 'Seller Central', 'Cumplimiento'];
+  if (currentPhase <= 5) {
+    document.getElementById('statPhase').textContent = `Fase ${currentPhase}`;
+    document.getElementById('statPhaseDetail').textContent = phaseNames[currentPhase - 1];
+  } else {
+    document.getElementById('statPhase').textContent = '✓ Completado';
+    document.getElementById('statPhaseDetail').textContent = 'todas las fases';
+  }
+
+  // Overall badge
+  const badge = document.getElementById('overallBadge');
+  if (pct === 0) {
+    badge.textContent = 'Sin iniciar'; badge.style.background = 'var(--bg-input)'; badge.style.color = 'var(--text-muted)'; badge.style.borderColor = 'var(--border)';
+  } else if (pct < 40) {
+    badge.textContent = `En progreso · ${pct}%`; badge.style.background = 'var(--accent-amber-dim)'; badge.style.color = 'var(--accent-amber)'; badge.style.borderColor = 'var(--accent-amber)';
+  } else if (pct < 100) {
+    badge.textContent = `Avanzando · ${pct}%`; badge.style.background = 'var(--accent-blue-dim)'; badge.style.color = 'var(--accent-blue)'; badge.style.borderColor = 'var(--accent-blue)';
+  } else {
+    badge.textContent = '🎉 Completado · 100%'; badge.style.background = 'var(--accent-green-dim)'; badge.style.color = 'var(--accent-green)'; badge.style.borderColor = 'var(--accent-green)';
+  }
+}
+
+// ══════════════════════════════════════════════
+//  COST TABLE
+// ══════════════════════════════════════════════
+function renderCosts() {
+  const tbody = document.getElementById('costTableBody');
+  tbody.innerHTML = COST_ROWS.map((row, i) => {
+    const spent = state.costs[i] || 0;
+    const cls = spent > 0 ? 'amount-spent' : 'amount-pending';
+    const spentStr = spent > 0 ? `$${spent.toFixed(2)}` : '—';
+    return `<tr>
+      <td>${row.label}</td>
+      <td class="amount-budget">$${row.budget.toFixed(2)}</td>
+      <td class="${cls}">${spentStr}</td>
+    </tr>`;
+  }).join('');
+
+  const total = state.costs.reduce((s, v) => s + (v || 0), 0);
+  document.getElementById('totalSpent').textContent = '$' + total.toFixed(2);
+  document.getElementById('statSpent').textContent = '$' + total.toFixed(2);
+
+  const budgetTotal = COST_ROWS.reduce((s, r) => s + r.budget, 0);
+  document.getElementById('totalBudget').textContent = '$' + budgetTotal.toFixed(2);
+  document.getElementById('statBudget').textContent = `de $${budgetTotal.toFixed(0)} presupuestado`;
+}
+
+function addSpent() {
+  const sel = document.getElementById('costConcept');
+  const amt = parseFloat(document.getElementById('costAmount').value);
+  if (sel.value === '' || isNaN(amt) || amt <= 0) return;
+  state.costs[parseInt(sel.value)] = (state.costs[parseInt(sel.value)] || 0) + amt;
+  document.getElementById('costAmount').value = '';
+  sel.value = '';
+  renderCosts();
+  save();
+}
+
+// ══════════════════════════════════════════════
+//  CONTACTS
+// ══════════════════════════════════════════════
+function renderContacts() {
+  const el = document.getElementById('contactsList');
+  if (state.contacts.length === 0) {
+    el.innerHTML = '<div style="font-size:12px;color:var(--text-muted);padding:8px 0;">Sin contactos registrados aún.</div>';
+    return;
+  }
+  el.innerHTML = state.contacts.map((c, i) => {
+    const iconData = CONTACT_ICONS[c.role] || CONTACT_ICONS['Otro'];
+    const statusClass = c.status === 'active' ? 'status-active' : c.status === 'pending' ? 'status-pending' : 'status-none';
+    const statusLabel = c.status === 'active' ? 'Activo' : c.status === 'pending' ? 'Pendiente' : 'Sin definir';
+    return `<div class="contact-item">
+      <div class="contact-icon" style="background:${iconData.bg}">${iconData.icon}</div>
+      <div class="contact-text" style="flex:1">
+        <div class="c-role">${c.role}</div>
+        <div class="c-name">${c.name}</div>
+        ${c.note ? `<div class="c-note">${c.note}</div>` : ''}
+        <textarea class="contact-notes-input" rows="1" placeholder="Añadir nota interna..."
+          onchange="updateContactNote(${i}, this.value)">${c.internalNote || ''}</textarea>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+        <span class="contact-status ${statusClass}">${statusLabel}</span>
+        <span style="font-size:10px;color:var(--text-muted);cursor:pointer;" onclick="removeContact(${i})">✕ quitar</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateContactNote(i, val) {
+  state.contacts[i].internalNote = val;
+  save();
+}
+
+function removeContact(i) {
+  state.contacts.splice(i, 1);
+  renderContacts();
+  save();
+}
+
+function openContactModal() {
+  document.getElementById('contactModal').classList.add('open');
+  document.getElementById('mName').value = '';
+  document.getElementById('mNote').value = '';
+  document.getElementById('mRole').value = 'Registered Agent';
+  document.getElementById('mStatus').value = 'pending';
+}
+
+function closeContactModal() {
+  document.getElementById('contactModal').classList.remove('open');
+}
+
+function saveContact() {
+  const name = document.getElementById('mName').value.trim();
+  if (!name) return;
+  state.contacts.push({
+    role: document.getElementById('mRole').value,
+    name,
+    note: document.getElementById('mNote').value.trim(),
+    status: document.getElementById('mStatus').value,
+    internalNote: '',
+  });
+  renderContacts();
+  save();
+  closeContactModal();
+}
+
+document.getElementById('contactModal').addEventListener('click', function(e) {
+  if (e.target === this) closeContactModal();
+});
+
+// ══════════════════════════════════════════════
+//  NOTES MODAL
+// ══════════════════════════════════════════════
+const PHASE_NAMES = [
+  'Registrar la LLC en Florida',
+  'Obtener EIN del IRS',
+  'Abrir cuenta bancaria',
+  'Registrar Amazon Seller Central',
+  'Cumplimiento anual',
+];
+const PHASE_COLORS = ['var(--phase1)', 'var(--phase2)', 'var(--phase3)', 'var(--phase4)', 'var(--phase5)'];
+
+let currentNotesPhase = 0;
+
+function openNotesModal(p) {
+  currentNotesPhase = p;
+  const dot = document.getElementById('notesModalDot');
+  dot.textContent = p + 1;
+  dot.style.background = PHASE_COLORS[p].replace('var(', '').replace(')', '');
+  dot.style.background = `rgba(${p===0?'62,207,142':p===1?'74,143,255':p===2?'245,158,11':p===3?'248,113,113':'167,139,250'},.2)`;
+  dot.style.color = PHASE_COLORS[p];
+  document.getElementById('notesModalTitle').textContent = `Notas — Fase ${p+1}: ${PHASE_NAMES[p]}`;
+  const ta = document.getElementById('notesModalTextarea');
+  ta.value = state.notes[p] || '';
+  updateCharCount();
+  document.getElementById('notesModal').classList.add('open');
+  setTimeout(() => ta.focus(), 100);
+}
+
+function closeNotesModal() {
+  document.getElementById('notesModal').classList.remove('open');
+}
+
+function updateCharCount() {
+  const val = document.getElementById('notesModalTextarea').value;
+  document.getElementById('notesCharCount').textContent = `${val.length} caracteres`;
+}
+
+function saveNotes() {
+  const val = document.getElementById('notesModalTextarea').value;
+  state.notes[currentNotesPhase] = val;
+  renderNotesPreview(currentNotesPhase);
+  save();
+  closeNotesModal();
+}
+
+function clearNotes() {
+  document.getElementById('notesModalTextarea').value = '';
+  updateCharCount();
+}
+
+function renderNotesPreview(p) {
+  const preview = document.getElementById(`notes-preview${p}`);
+  const btn = document.getElementById(`btn-notes${p}`);
+  const val = state.notes[p] || '';
+  const firstLine = val.split('\n')[0].trim();
+  if (firstLine) {
+    preview.textContent = firstLine;
+    preview.classList.add('has-content');
+    btn.classList.add('has-notes');
+    btn.textContent = '📝 Ver notas';
+  } else {
+    preview.textContent = 'Sin notas aún...';
+    preview.classList.remove('has-content');
+    btn.classList.remove('has-notes');
+    btn.textContent = '📝 Notas';
+  }
+}
+
+function initNotes() {
+  const ta = document.getElementById('notesModalTextarea');
+  ta.addEventListener('input', updateCharCount);
+  document.getElementById('notesModal').addEventListener('click', function(e) {
+    if (e.target === this) closeNotesModal();
+  });
+  for (let p = 0; p < 5; p++) {
+    renderNotesPreview(p);
+  }
+}
+
+// ══════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════
+function addStepNumbers() {
+  document.querySelectorAll('.steps-list').forEach((list, phaseIndex) => {
+    list.querySelectorAll('.step-row').forEach((row, stepIndex) => {
+      if (!row.querySelector('.step-num')) {
+        const num = document.createElement('div');
+        num.className = 'step-num';
+        num.textContent = `${phaseIndex + 1}.${stepIndex + 1}`;
+        row.insertBefore(num, row.firstChild);
+      }
+    });
+  });
+}
+
+function init() {
+  for (let p = 0; p < 5; p++) {
+    for (let s = 0; s < PHASES[p].steps; s++) {
+      renderStep(p, s);
+    }
+    renderMini(p);
+    applyPhaseOpen(p);
+  }
+  renderProgress();
+  renderStats();
+  renderCosts();
+  renderContacts();
+  initNotes();
+  addStepNumbers();
+
+  // Nota por defecto Fase 1 si está vacía
+  const DEFAULT_NOTE_0 = `✅ DECISIÓN TOMADA: LLC en Florida via Bizee
+
+→ Bizee Plan Estándar: $324 total ($199 Bizee + $125 fee Florida)
+→ RA año 1: gratis | RA año 2+: $119/año
+→ Virtual Address: gratis 1er mes, luego ~$10–15/mes con servicio externo
+→ Reporte anual Florida: ~$138/año (vence antes del 1 de mayo cada año)
+→ Resale Certificate: gratis, tramitar en floridarevenue.com
+
+VENTAJAS DE ESTA DECISIÓN:
+→ Un solo estado — sin trámite de Foreign LLC Registration
+→ Prep Center en Florida queda en el mismo estado de la LLC
+→ Resale Certificate más directo al estar registrado en Florida
+→ Bizee ya conocido y de confianza para el proceso
+
+⚠️ PENDIENTE: Confirmar con CPA el tema fiscal antes de presentar el Form 5472`;
+
+
+  if (!state.notes[0]) {
+    state.notes[0] = DEFAULT_NOTE_0;
+    renderNotesPreview(0);
+    save();
+  }
+
+  const raw = localStorage.getItem('wlstonveil_v2');
+  document.getElementById('lastSaved').textContent = raw ? 'Datos restaurados' : 'Nuevo proyecto';
+}
+
+init();
+</script>
+</body>
+</html>
