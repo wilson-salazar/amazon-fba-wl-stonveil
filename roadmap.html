@@ -399,11 +399,19 @@
   .budget-editable:hover { color: var(--accent-blue) !important; }
   .budget-editable::after { content: ' ✎'; font-size: 9px; opacity: 0; transition: opacity .15s; }
   .budget-editable:hover::after { opacity: 1; }
+  .budget-edit-wrap { display: flex; align-items: center; gap: 4px; }
   .budget-inline-input {
-    width: 72px; background: var(--bg-input); border: 1px solid var(--accent-blue);
-    border-radius: 4px; color: var(--text-primary); font-size: 12px;
-    padding: 2px 5px; text-align: right; outline: none;
+    width: 60px; background: transparent; border: none; border-bottom: 1.5px solid var(--accent-blue);
+    color: var(--text-primary); font-size: 12px; font-weight: 600;
+    padding: 1px 2px; text-align: right; outline: none;
+    -moz-appearance: textfield;
   }
+  .budget-inline-input::-webkit-outer-spin-button,
+  .budget-inline-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .budget-btn { background: none; border: none; cursor: pointer; font-size: 11px; padding: 0 2px; line-height: 1; }
+  .budget-btn-ok  { color: var(--accent-green); }
+  .budget-btn-rst { color: var(--text-muted); font-size: 10px; }
+  .budget-btn:hover { opacity: .7; }
   .cost-input {
     flex: 1; background: var(--bg-input); border: 1px solid var(--border);
     border-radius: var(--radius-sm); color: var(--text-primary); font-size: 12px;
@@ -1375,11 +1383,32 @@ function renderCosts() {
 }
 
 function editBudget(cell, i) {
-  const current = state.budgets[i] ?? COST_ROWS[i].budget;
-  cell.innerHTML = `<input class="budget-inline-input" type="number" value="${current}" min="0" step="0.01"
-    onblur="saveBudget(${i},this)" onkeydown="if(event.key==='Enter')this.blur();if(event.key==='Escape')renderCosts();" />`;
-  const inp = cell.querySelector('input');
+  const current = (state.budgets[i] ?? COST_ROWS[i].budget).toFixed(2);
+  const original = COST_ROWS[i].budget.toFixed(2);
+  cell.innerHTML = `
+    <div class="budget-edit-wrap">
+      <span style="color:var(--text-muted);font-size:11px">$</span>
+      <input class="budget-inline-input" type="number" id="bi${i}" value="${current}" min="0" step="0.01"
+        onkeydown="if(event.key==='Enter')confirmBudget(${i});if(event.key==='Escape')renderCosts();" />
+      <button class="budget-btn budget-btn-ok" onclick="confirmBudget(${i})" title="Guardar">✓</button>
+      <button class="budget-btn budget-btn-rst" onclick="resetBudget(${i})" title="Restaurar valor original ($${original})">↺</button>
+    </div>`;
+  const inp = document.getElementById(`bi${i}`);
   inp.focus(); inp.select();
+}
+
+function confirmBudget(i) {
+  const inp = document.getElementById(`bi${i}`);
+  if (!inp) return;
+  const val = parseFloat(inp.value);
+  if (!isNaN(val) && val >= 0) { state.budgets[i] = val; save(); }
+  renderCosts();
+}
+
+function resetBudget(i) {
+  state.budgets[i] = COST_ROWS[i].budget;
+  save();
+  renderCosts();
 }
 
 function saveBudget(i, input) {
