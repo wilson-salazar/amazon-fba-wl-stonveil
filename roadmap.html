@@ -393,6 +393,17 @@
   .oblig-name { color: var(--text-secondary); flex: 1; }
   .oblig-cost { font-weight: 600; color: var(--text-primary); white-space: nowrap; margin-left: 8px; }
   .oblig-note { font-size: 10px; color: var(--text-muted); margin-top: 1px; }
+
+  /* Budget editable */
+  .budget-editable { cursor: pointer; transition: color .15s; }
+  .budget-editable:hover { color: var(--accent-blue) !important; }
+  .budget-editable::after { content: ' ✎'; font-size: 9px; opacity: 0; transition: opacity .15s; }
+  .budget-editable:hover::after { opacity: 1; }
+  .budget-inline-input {
+    width: 72px; background: var(--bg-input); border: 1px solid var(--accent-blue);
+    border-radius: 4px; color: var(--text-primary); font-size: 12px;
+    padding: 2px 5px; text-align: right; outline: none;
+  }
   .cost-input {
     flex: 1; background: var(--bg-input); border: 1px solid var(--border);
     border-radius: var(--radius-sm); color: var(--text-primary); font-size: 12px;
@@ -688,6 +699,14 @@
               </div>
               <div class="step-cost cost-free">Gratis</div>
             </div>
+            <div class="step-row">
+              <div class="step-check" onclick="toggleStep(1,4)" id="chk-1-4"></div>
+              <div class="step-content">
+                <div class="step-label" id="lbl-1-4">BOI Report (FinCEN — propietario beneficiario)</div>
+                <div class="step-detail">La Ley de Transparencia Corporativa (CTA) exige reportar al FinCEN quién es el dueño real de la LLC. Plazo: 90 días desde formar la LLC para empresas nuevas. Presentar en fincen.gov/boi — gratuito y 100% online. Datos requeridos: nombre completo, fecha de nacimiento, dirección y copia de pasaporte. ⚠️ Verificar con CPA el estado vigente — en 2024-2025 hubo disputas legales que afectaron su implementación.</div>
+              </div>
+              <div class="step-cost cost-free">Gratis</div>
+            </div>
           </div>
           <div class="phase-notes-wrap">
             <div class="phase-notes-preview" id="notes-preview1">Sin notas aún...</div>
@@ -962,6 +981,65 @@
         <button class="add-contact-btn" onclick="openContactModal()">+ Añadir contacto / proveedor</button>
       </div>
 
+      <!-- REPORTES GUBERNAMENTALES -->
+      <div class="card">
+        <div class="card-title">Reportes ante el gobierno EE.UU.</div>
+
+        <div class="oblig-group">
+          <div class="oblig-freq freq-unica">📋 Una sola vez (al formar)</div>
+          <div class="oblig-row">
+            <div>
+              <div class="oblig-name">BE-13 Exempt — BEA</div>
+              <div class="oblig-note">Plazo: 45 días desde formar la LLC · bea.gov</div>
+            </div>
+            <div class="oblig-cost">Gratis</div>
+          </div>
+          <div class="oblig-row">
+            <div>
+              <div class="oblig-name">BOI Report — FinCEN</div>
+              <div class="oblig-note">Plazo: 90 días · fincen.gov/boi · ⚠️ Verificar estado legal 2025</div>
+            </div>
+            <div class="oblig-cost">Gratis</div>
+          </div>
+        </div>
+
+        <div class="oblig-group">
+          <div class="oblig-freq freq-anual">📆 Anuales</div>
+          <div class="oblig-row">
+            <div>
+              <div class="oblig-name">Florida Annual Report — sunbiz.org</div>
+              <div class="oblig-note">Vence antes del 1 de mayo cada año</div>
+            </div>
+            <div class="oblig-cost">~$138</div>
+          </div>
+          <div class="oblig-row">
+            <div>
+              <div class="oblig-name">Form 5472 + 1120 — IRS</div>
+              <div class="oblig-note">15 de abril · ⚠️ Multa $25,000 si no se presenta · con CPA</div>
+            </div>
+            <div class="oblig-cost">~$550</div>
+          </div>
+        </div>
+
+        <div class="oblig-group">
+          <div class="oblig-freq" style="background:rgba(148,163,184,.1);color:var(--text-muted)">🚫 No aplica a tu modelo</div>
+          <div class="oblig-row">
+            <div>
+              <div class="oblig-name">Form 941 (nómina trimestral)</div>
+              <div class="oblig-note">Solo si tienes empleados en EE.UU.</div>
+            </div>
+            <div class="oblig-cost" style="color:var(--text-muted)">N/A</div>
+          </div>
+          <div class="oblig-row">
+            <div>
+              <div class="oblig-name">Sales Tax returns</div>
+              <div class="oblig-note">Amazon lo maneja automáticamente en FBA</div>
+            </div>
+            <div class="oblig-cost" style="color:var(--text-muted)">N/A</div>
+          </div>
+        </div>
+      </div>
+
       <!-- OBLIGACIONES RECURRENTES -->
       <div class="card">
         <div class="card-title">Obligaciones recurrentes</div>
@@ -1110,7 +1188,7 @@
 // ══════════════════════════════════════════════
 const PHASES = [
   { steps: 6 },
-  { steps: 4 },
+  { steps: 5 },
   { steps: 3 },
   { steps: 5 },
   { steps: 3 },
@@ -1143,8 +1221,12 @@ let state = JSON.parse(localStorage.getItem('wlstonveil_v2') || 'null') || {
   notes: Array(5).fill(''),
   phaseOpen: [true, false, false, false, false],
   costs: COST_ROWS.map(() => 0),
+  budgets: COST_ROWS.map(r => r.budget),
   contacts: [],
 };
+// Migración: presupuestos editables
+if (!state.budgets) state.budgets = COST_ROWS.map(r => r.budget);
+while (state.budgets.length < COST_ROWS.length) state.budgets.push(COST_ROWS[state.budgets.length].budget);
 // Migración: asegurar que cada fase tenga el número correcto de pasos
 PHASES.forEach((phase, i) => {
   if (!state.checks[i]) state.checks[i] = [];
@@ -1273,11 +1355,12 @@ function renderCosts() {
   const tbody = document.getElementById('costTableBody');
   tbody.innerHTML = COST_ROWS.map((row, i) => {
     const spent = state.costs[i] || 0;
+    const budget = state.budgets[i] ?? row.budget;
     const cls = spent > 0 ? 'amount-spent' : 'amount-pending';
     const spentStr = spent > 0 ? `$${spent.toFixed(2)}` : '—';
     return `<tr>
       <td>${row.label}</td>
-      <td class="amount-budget">$${row.budget.toFixed(2)}</td>
+      <td class="amount-budget budget-editable" title="Clic para editar" onclick="editBudget(this,${i})">$${budget.toFixed(2)}</td>
       <td class="${cls}">${spentStr}</td>
     </tr>`;
   }).join('');
@@ -1286,9 +1369,23 @@ function renderCosts() {
   document.getElementById('totalSpent').textContent = '$' + total.toFixed(2);
   document.getElementById('statSpent').textContent = '$' + total.toFixed(2);
 
-  const budgetTotal = COST_ROWS.reduce((s, r) => s + r.budget, 0);
+  const budgetTotal = state.budgets.reduce((s, v) => s + (v || 0), 0);
   document.getElementById('totalBudget').textContent = '$' + budgetTotal.toFixed(2);
   document.getElementById('statBudget').textContent = `de $${budgetTotal.toFixed(0)} presupuestado`;
+}
+
+function editBudget(cell, i) {
+  const current = state.budgets[i] ?? COST_ROWS[i].budget;
+  cell.innerHTML = `<input class="budget-inline-input" type="number" value="${current}" min="0" step="0.01"
+    onblur="saveBudget(${i},this)" onkeydown="if(event.key==='Enter')this.blur();if(event.key==='Escape')renderCosts();" />`;
+  const inp = cell.querySelector('input');
+  inp.focus(); inp.select();
+}
+
+function saveBudget(i, input) {
+  const val = parseFloat(input.value);
+  if (!isNaN(val) && val >= 0) { state.budgets[i] = val; save(); }
+  renderCosts();
 }
 
 function addSpent() {
