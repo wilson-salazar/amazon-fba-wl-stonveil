@@ -608,7 +608,7 @@
               <div class="step-check" onclick="toggleStep(0,5)" id="chk-0-5"></div>
               <div class="step-text">
                 <div class="step-label" id="lbl-0-5">Obtener dirección comercial física (Virtual Mailbox)</div>
-                <div class="step-detail">Dirección física real en EE.UU. para usar en Amazon, bancos y formularios. Diferente a la del RA. ✅ Bizee Plan Estándar incluye Virtual Address gratis el 1er mes — aprovéchalo para los primeros registros. Mes 2 en adelante: contratar servicio externo más económico: Anytime Mailbox, PostScan Mail o iPostal1 (~$10–$15/mes). IMPORTANTE: usar esta dirección exactamente igual en todos los formularios.</div>
+                <div class="step-detail">Dirección física real en EE.UU. para usar en Amazon, bancos y formularios. Diferente a la del RA. ✅ Bizee Plan Estándar incluye Virtual Address gratis el 1er mes — aprovéchalo para los primeros registros. Mes 2 en adelante: contratar servicio externo: Anytime Mailbox, PostScan Mail o iPostal1 (~$10–$15/mes). — FORM 1583 (obligatorio por USPS): para activar el mailbox debes llenar el Form 1583, notarizarlo (~$25 con Notarize.com online desde Colombia) y enviárselo al proveedor del mailbox (Bizee o el servicio externo). Ellos lo archivan y activan tu dirección. Se repite una sola vez con cada proveedor nuevo. — IMPORTANTE: usar esta dirección exactamente igual en todos los formularios.</div>
               </div>
               <div class="step-cost cost-paid">$10–$20/mes</div>
             </div>
@@ -659,6 +659,14 @@
                 <div class="step-detail">Documento indispensable para abrir cuenta bancaria y registrarse en Amazon.</div>
               </div>
               <div class="step-cost cost-free">—</div>
+            </div>
+            <div class="step-row">
+              <div class="step-check" onclick="toggleStep(1,3)" id="chk-1-3"></div>
+              <div class="step-content">
+                <div class="step-label" id="lbl-1-3">Formulario BE-13 (BEA — inversión extranjera)</div>
+                <div class="step-detail">El Bureau of Economic Analysis (BEA) exige reportar cuando un extranjero establece un negocio en EE.UU. Plazo: 45 días desde que se establece la LLC. Si la inversión es menor a $3 millones (tu caso), presentar BE-13 Exempt en bea.gov — es gratuito y toma pocos minutos. Confirmar con CPA si aplica o si con el Exempt es suficiente.</div>
+              </div>
+              <div class="step-cost cost-free">Gratis</div>
             </div>
           </div>
           <div class="phase-notes-wrap">
@@ -1004,7 +1012,7 @@
 // ══════════════════════════════════════════════
 const PHASES = [
   { steps: 6 },
-  { steps: 3 },
+  { steps: 4 },
   { steps: 3 },
   { steps: 5 },
   { steps: 3 },
@@ -1399,7 +1407,6 @@ VENTAJAS DE ESTA DECISIÓN:
 
   if (!state.notes[0]) {
     state.notes[0] = DEFAULT_NOTE_0;
-    renderNotesPreview(0);
     save();
   }
 
