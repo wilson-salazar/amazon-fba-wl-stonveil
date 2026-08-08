@@ -373,6 +373,26 @@
   .cost-total-val { font-size: 14px; font-weight: 700; }
 
   .cost-input-row { display: flex; gap: 8px; margin-top: 10px; }
+
+  /* Obligaciones recurrentes */
+  .oblig-group { margin-bottom: 14px; }
+  .oblig-group:last-child { margin-bottom: 0; }
+  .oblig-freq {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px;
+    padding: 2px 8px; border-radius: 20px; margin-bottom: 8px;
+  }
+  .freq-mensual  { background: rgba(74,143,255,.15); color: #4a8fff; }
+  .freq-anual    { background: rgba(245,158,11,.15);  color: var(--accent-amber); }
+  .freq-unica    { background: rgba(62,207,142,.15);  color: var(--accent-green); }
+  .oblig-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 5px 0; border-bottom: 1px solid var(--border); font-size: 12px;
+  }
+  .oblig-row:last-child { border-bottom: none; }
+  .oblig-name { color: var(--text-secondary); flex: 1; }
+  .oblig-cost { font-weight: 600; color: var(--text-primary); white-space: nowrap; margin-left: 8px; }
+  .oblig-note { font-size: 10px; color: var(--text-muted); margin-top: 1px; }
   .cost-input {
     flex: 1; background: var(--bg-input); border: 1px solid var(--border);
     border-radius: var(--radius-sm); color: var(--text-primary); font-size: 12px;
@@ -940,6 +960,84 @@
           <!-- injected by JS -->
         </div>
         <button class="add-contact-btn" onclick="openContactModal()">+ Añadir contacto / proveedor</button>
+      </div>
+
+      <!-- OBLIGACIONES RECURRENTES -->
+      <div class="card">
+        <div class="card-title">Obligaciones recurrentes</div>
+
+        <div class="oblig-group">
+          <div class="oblig-freq freq-mensual">📅 Mensuales</div>
+          <div class="oblig-row">
+            <div>
+              <div class="oblig-name">Amazon Seller Central</div>
+            </div>
+            <div class="oblig-cost">$39.99</div>
+          </div>
+          <div class="oblig-row">
+            <div>
+              <div class="oblig-name">Virtual Mailbox</div>
+              <div class="oblig-note">Gratis mes 1 (Bizee), luego servicio externo</div>
+            </div>
+            <div class="oblig-cost">$10–$15</div>
+          </div>
+          <div class="oblig-row">
+            <div>
+              <div class="oblig-name">Teléfono EE.UU.</div>
+              <div class="oblig-note">Google Voice gratis, OpenPhone $13/mes</div>
+            </div>
+            <div class="oblig-cost">$0–$13</div>
+          </div>
+        </div>
+
+        <div class="oblig-group">
+          <div class="oblig-freq freq-anual">📆 Anuales</div>
+          <div class="oblig-row">
+            <div>
+              <div class="oblig-name">Florida Annual Report</div>
+              <div class="oblig-note">Vence antes del 1 de mayo — sunbiz.org</div>
+            </div>
+            <div class="oblig-cost">~$138</div>
+          </div>
+          <div class="oblig-row">
+            <div>
+              <div class="oblig-name">Registered Agent (Bizee)</div>
+              <div class="oblig-note">Gratis año 1, $119/año desde año 2</div>
+            </div>
+            <div class="oblig-cost">$119</div>
+          </div>
+          <div class="oblig-row">
+            <div>
+              <div class="oblig-name">Form 5472 + 1120 (CPA)</div>
+              <div class="oblig-note">⚠️ Multa $25,000 si no se presenta</div>
+            </div>
+            <div class="oblig-cost">~$550</div>
+          </div>
+        </div>
+
+        <div class="oblig-group">
+          <div class="oblig-freq freq-unica">✅ Una sola vez</div>
+          <div class="oblig-row">
+            <div>
+              <div class="oblig-name">Formación LLC (Bizee FL)</div>
+            </div>
+            <div class="oblig-cost">$324</div>
+          </div>
+          <div class="oblig-row">
+            <div>
+              <div class="oblig-name">Form 1583 — notarización</div>
+              <div class="oblig-note">Para activar Virtual Mailbox</div>
+            </div>
+            <div class="oblig-cost">~$25</div>
+          </div>
+          <div class="oblig-row">
+            <div>
+              <div class="oblig-name">BE-13 Exempt (BEA)</div>
+              <div class="oblig-note">Dentro de 45 días de formar la LLC</div>
+            </div>
+            <div class="oblig-cost">Gratis</div>
+          </div>
+        </div>
       </div>
 
     </div><!-- /side-panel -->
