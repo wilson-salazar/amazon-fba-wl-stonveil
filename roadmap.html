@@ -522,6 +522,45 @@
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+
+  /* ── TABS ── */
+  .tab-bar {
+    display: flex; gap: 4px; padding: 0 24px; background: var(--bg-card);
+    border-bottom: 1px solid var(--border); overflow-x: auto;
+  }
+  .tab-btn {
+    padding: 13px 18px; background: none; border: none; font-family: inherit;
+    font-size: 13px; font-weight: 600; color: var(--text-muted); cursor: pointer;
+    border-bottom: 2px solid transparent; white-space: nowrap; transition: color .15s, border-color .15s;
+  }
+  .tab-btn:hover { color: var(--text-secondary); }
+  .tab-btn.active { color: var(--accent-blue); border-bottom-color: var(--accent-blue); }
+  .tab-panel.hidden { display: none; }
+
+  /* ── GOAL BAR ── */
+  .goal-bar-track {
+    width: 100%; height: 10px; background: var(--bg-input); border-radius: 5px;
+    overflow: hidden; margin-top: 4px;
+  }
+  .goal-bar-fill {
+    height: 100%; background: linear-gradient(90deg, var(--accent-purple), var(--accent-blue));
+    border-radius: 5px; transition: width .3s ease;
+  }
+  .goal-stats-row {
+    display: flex; justify-content: space-between; margin-top: 6px;
+    font-size: 11px; color: var(--text-muted); font-weight: 600;
+  }
+  #goalCurrentLabel { color: var(--accent-purple); }
+
+  /* ── OP COSTS TABLE row remove btn ── */
+  .op-cost-remove {
+    color: var(--text-muted); cursor: pointer; font-size: 12px; padding: 0 4px;
+  }
+  .op-cost-remove:hover { color: var(--accent-red); }
+
+  .empty-note {
+    font-size: 12px; color: var(--text-muted); padding: 8px 0;
+  }
 </style>
 </head>
 <body>
@@ -539,7 +578,12 @@
   </div>
 </header>
 
-<div class="container">
+<nav class="tab-bar">
+  <button class="tab-btn" id="tabbtn-roadmap" onclick="switchTab('roadmap')">🗺️ Roadmap</button>
+  <button class="tab-btn" id="tabbtn-operacion" onclick="switchTab('operacion')">⚙️ Operación</button>
+</nav>
+
+<div class="container tab-panel" id="tab-roadmap">
 
   <!-- ══ STAT CARDS ══ -->
   <div class="stats-row">
@@ -1137,7 +1181,130 @@
 
     </div><!-- /side-panel -->
   </div><!-- /main-grid -->
-</div>
+</div><!-- /tab-roadmap -->
+
+<!-- ══════════════════════════════════════════════ -->
+<!--  TAB: OPERACIÓN                                 -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="container tab-panel hidden" id="tab-operacion">
+
+  <!-- ══ STAT CARDS ══ -->
+  <div class="stats-row">
+    <div class="stat-card stat-accent-green">
+      <div class="stat-label">Hitos de la LLC</div>
+      <div class="stat-value" id="opStatDone">0/5</div>
+      <div class="stat-sub">completados</div>
+    </div>
+    <div class="stat-card stat-accent-amber">
+      <div class="stat-label">Gasto operativo</div>
+      <div class="stat-value" id="opStatMonthly">$0</div>
+      <div class="stat-sub" id="opStatAnnual">$0/año</div>
+    </div>
+    <div class="stat-card stat-accent-blue">
+      <div class="stat-label">Ganancia neta actual</div>
+      <div class="stat-value" id="opStatProfit">$0</div>
+      <div class="stat-sub">por mes</div>
+    </div>
+    <div class="stat-card stat-accent-purple">
+      <div class="stat-label">Meta de independencia</div>
+      <div class="stat-value" id="opStatGoalPct">0%</div>
+      <div class="stat-sub" id="opStatGoalTarget">de $15,000/mes</div>
+    </div>
+  </div>
+
+  <div class="main-grid">
+
+    <!-- LEFT COLUMN -->
+    <div>
+      <div class="section-title">Estado y meta del negocio</div>
+
+      <!-- HITOS DE LA LLC -->
+      <div class="card">
+        <div class="card-title">Hitos de la LLC</div>
+        <div class="steps-list" id="llcStatusList"><!-- injected --></div>
+      </div>
+
+      <!-- META FINANCIERA -->
+      <div class="card">
+        <div class="card-title">Meta financiera — Independencia total</div>
+        <p style="font-size:12px;color:var(--text-secondary);margin:0 0 14px;line-height:1.65;">
+          Salario combinado actual (Wilson + esposa): <strong style="color:var(--text-primary)">$8,500/mes</strong>.
+          Meta para dejar ambos trabajos con colchón de seguridad: <strong style="color:var(--accent-purple)">$15,000/mes</strong> en ganancia neta de la LLC.
+        </p>
+        <div class="goal-bar-track"><div class="goal-bar-fill" id="goalBarFill" style="width:0%"></div></div>
+        <div class="goal-stats-row">
+          <span id="goalCurrentLabel">$0/mes</span>
+          <span id="goalTargetLabel">$15,000/mes</span>
+        </div>
+        <div class="cost-input-row" style="margin-top:14px;">
+          <input class="cost-input" id="profitInput" type="number" min="0" placeholder="Ganancia neta mensual actual ($)" />
+          <button class="btn-add" onclick="setCurrentProfit()">Actualizar</button>
+        </div>
+      </div>
+
+      <!-- GASTOS OPERATIVOS -->
+      <div class="card">
+        <div class="card-title">Gastos operativos mensuales</div>
+        <table class="cost-table">
+          <thead><tr><th>Concepto</th><th>Mensual</th><th></th></tr></thead>
+          <tbody id="opCostsBody"><!-- injected --></tbody>
+        </table>
+        <div class="cost-footer" style="flex-direction:column;gap:6px;align-items:stretch;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span class="cost-total-label">Total mensual</span>
+            <span class="cost-total-val" id="opCostsMonthlyTotal">$0</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span class="cost-total-label">Proyección anual</span>
+            <span class="cost-total-val" id="opCostsAnnualTotal" style="color:var(--text-muted)">$0</span>
+          </div>
+        </div>
+        <div class="cost-input-row" style="margin-top:14px;">
+          <input class="cost-input" id="opCostLabel" type="text" placeholder="Nuevo concepto" style="flex:2" />
+          <input class="cost-input" id="opCostAmount" type="number" min="0" placeholder="$/mes" />
+          <button class="btn-add" onclick="addOpCost()">+ Añadir</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="side-panel">
+
+      <!-- REPORTES GUBERNAMENTALES RECURRENTES -->
+      <div class="card">
+        <div class="card-title">Cumplimiento recurrente ante el gobierno</div>
+
+        <div class="oblig-group">
+          <div class="oblig-freq freq-mensual">📅 Mensuales</div>
+          <div class="empty-note">Sin obligaciones mensuales para tu modelo (sin nómina en EE.UU.).</div>
+        </div>
+
+        <div class="oblig-group">
+          <div class="oblig-freq" style="background:rgba(74,143,255,.1);color:var(--accent-blue)">📊 Trimestrales</div>
+          <div class="empty-note">Sin obligaciones — Amazon gestiona el Sales Tax automáticamente en FBA.</div>
+        </div>
+
+        <div class="oblig-group">
+          <div class="oblig-freq" style="background:rgba(167,139,250,.1);color:var(--accent-purple)">🗓️ Semestrales</div>
+          <div class="empty-note">Sin obligaciones para tu modelo actual.</div>
+        </div>
+
+        <div class="oblig-group">
+          <div class="oblig-freq freq-anual">📆 Anuales</div>
+          <div class="steps-list" id="govRecurringList"><!-- injected --></div>
+        </div>
+      </div>
+
+      <!-- PROVEEDORES -->
+      <div class="card">
+        <div class="card-title">Proveedores mayoristas</div>
+        <div id="suppliersList"><!-- injected --></div>
+        <button class="add-contact-btn" onclick="openContactModal('Proveedor mayorista')">+ Añadir proveedor</button>
+      </div>
+
+    </div><!-- /side-panel -->
+  </div><!-- /main-grid -->
+</div><!-- /tab-operacion -->
 
 <!-- MODAL: Notas de fase -->
 <div class="notes-modal-overlay" id="notesModal">
@@ -1441,6 +1608,7 @@ function addSpent() {
 //  CONTACTS
 // ══════════════════════════════════════════════
 function renderContacts() {
+  renderSuppliersView();
   const el = document.getElementById('contactsList');
   if (state.contacts.length === 0) {
     el.innerHTML = '<div style="font-size:12px;color:var(--text-muted);padding:8px 0;">Sin contactos registrados aún.</div>';
@@ -1478,11 +1646,41 @@ function removeContact(i) {
   save();
 }
 
-function openContactModal() {
+// ══════════════════════════════════════════════
+//  SUPPLIERS VIEW (filtered contacts, tab Operación)
+// ══════════════════════════════════════════════
+function renderSuppliersView() {
+  const el = document.getElementById('suppliersList');
+  if (!el) return;
+  const suppliers = state.contacts
+    .map((c, i) => ({ ...c, idx: i }))
+    .filter(c => c.role === 'Proveedor mayorista');
+  if (suppliers.length === 0) {
+    el.innerHTML = '<div class="empty-note">Sin proveedores aún — se agregarán cuando tengamos los productos definidos con SmartScout.</div>';
+    return;
+  }
+  el.innerHTML = suppliers.map(c => {
+    const statusClass = c.status === 'active' ? 'status-active' : c.status === 'pending' ? 'status-pending' : 'status-none';
+    const statusLabel = c.status === 'active' ? 'Activo' : c.status === 'pending' ? 'Pendiente' : 'Sin definir';
+    return `<div class="contact-item">
+      <div class="contact-icon" style="background:rgba(248,113,113,.15)">🏭</div>
+      <div class="contact-text" style="flex:1">
+        <div class="c-name">${c.name}</div>
+        ${c.note ? `<div class="c-note">${c.note}</div>` : ''}
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+        <span class="contact-status ${statusClass}">${statusLabel}</span>
+        <span style="font-size:10px;color:var(--text-muted);cursor:pointer;" onclick="removeContact(${c.idx})">✕ quitar</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openContactModal(presetRole) {
   document.getElementById('contactModal').classList.add('open');
   document.getElementById('mName').value = '';
   document.getElementById('mNote').value = '';
-  document.getElementById('mRole').value = 'Registered Agent';
+  document.getElementById('mRole').value = presetRole || 'Registered Agent';
   document.getElementById('mStatus').value = 'pending';
 }
 
@@ -1590,6 +1788,191 @@ function initNotes() {
 }
 
 // ══════════════════════════════════════════════
+//  TAB SWITCHING
+// ══════════════════════════════════════════════
+function switchTab(name) {
+  document.getElementById('tab-roadmap').classList.toggle('hidden', name !== 'roadmap');
+  document.getElementById('tab-operacion').classList.toggle('hidden', name !== 'operacion');
+  document.getElementById('tabbtn-roadmap').classList.toggle('active', name === 'roadmap');
+  document.getElementById('tabbtn-operacion').classList.toggle('active', name === 'operacion');
+  localStorage.setItem('wlstonveil_active_tab', name);
+}
+
+// ══════════════════════════════════════════════
+//  TAB OPERACIÓN — STATE
+// ══════════════════════════════════════════════
+const LLC_STATUS_LABELS = [
+  'LLC constituida (Articles of Organization aprobados)',
+  'EIN obtenido',
+  'Cuenta bancaria activa',
+  'Seller Central aprobado',
+  'Primera venta realizada',
+];
+
+const GOV_RECURRING_ITEMS = [
+  { label: 'Florida Annual Report', detail: 'Vence antes del 1 de mayo — sunbiz.org', cost: '~$138' },
+  { label: 'Form 5472 + 1120 (IRS, con CPA)', detail: 'Vence 15 de abril · ⚠️ multa $25,000 si no se presenta', cost: '~$550' },
+  { label: 'Renovación Registered Agent (Bizee)', detail: 'Renovación anual del servicio', cost: '$119' },
+];
+
+const OP_COSTS_DEFAULT = [
+  { label: 'Amazon Seller Central', amount: 39.99 },
+  { label: 'Virtual Mailbox', amount: 12 },
+  { label: 'Teléfono EE.UU.', amount: 0 },
+  { label: 'SmartScout', amount: 0 },
+  { label: 'Keepa API', amount: 53 },
+  { label: 'Prep Center (estimado)', amount: 0 },
+];
+
+let opState = JSON.parse(localStorage.getItem('wlstonveil_ops_v1') || 'null') || {
+  llcStatus: LLC_STATUS_LABELS.map(() => false),
+  goalTarget: 15000,
+  currentProfit: 0,
+  opCosts: OP_COSTS_DEFAULT.map(r => ({ ...r })),
+  govDone: GOV_RECURRING_ITEMS.map(() => false),
+};
+// Migraciones defensivas
+while (opState.llcStatus.length < LLC_STATUS_LABELS.length) opState.llcStatus.push(false);
+while (opState.govDone.length < GOV_RECURRING_ITEMS.length) opState.govDone.push(false);
+if (!Array.isArray(opState.opCosts) || opState.opCosts.length === 0) opState.opCosts = OP_COSTS_DEFAULT.map(r => ({ ...r }));
+
+function saveOps() {
+  localStorage.setItem('wlstonveil_ops_v1', JSON.stringify(opState));
+}
+
+// ── Hitos de la LLC ──
+function renderLlcStatus() {
+  const el = document.getElementById('llcStatusList');
+  el.innerHTML = LLC_STATUS_LABELS.map((label, i) => {
+    const done = opState.llcStatus[i];
+    return `<div class="step-row">
+      <div class="step-check${done ? ' done' : ''}" onclick="toggleLlcStatus(${i})"></div>
+      <div class="step-text"><div class="step-label${done ? ' done' : ''}">${label}</div></div>
+    </div>`;
+  }).join('');
+  const doneCount = opState.llcStatus.filter(Boolean).length;
+  document.getElementById('opStatDone').textContent = `${doneCount}/${LLC_STATUS_LABELS.length}`;
+}
+
+function toggleLlcStatus(i) {
+  opState.llcStatus[i] = !opState.llcStatus[i];
+  renderLlcStatus();
+  saveOps();
+}
+
+// ── Meta financiera ──
+function renderGoal() {
+  const target = opState.goalTarget;
+  const current = opState.currentProfit || 0;
+  const pct = Math.min(100, Math.round((current / target) * 100));
+  document.getElementById('goalBarFill').style.width = pct + '%';
+  document.getElementById('goalCurrentLabel').textContent = `$${current.toLocaleString('en-US')}/mes`;
+  document.getElementById('goalTargetLabel').textContent = `$${target.toLocaleString('en-US')}/mes`;
+  document.getElementById('opStatProfit').textContent = '$' + current.toLocaleString('en-US');
+  document.getElementById('opStatGoalPct').textContent = pct + '%';
+  document.getElementById('opStatGoalTarget').textContent = `de $${target.toLocaleString('en-US')}/mes`;
+}
+
+function setCurrentProfit() {
+  const inp = document.getElementById('profitInput');
+  const val = parseFloat(inp.value);
+  if (!isNaN(val) && val >= 0) {
+    opState.currentProfit = val;
+    saveOps();
+    renderGoal();
+  }
+  inp.value = '';
+}
+
+// ── Gastos operativos mensuales ──
+function renderOpCosts() {
+  const tbody = document.getElementById('opCostsBody');
+  tbody.innerHTML = opState.opCosts.map((row, i) => `
+    <tr>
+      <td>${row.label}</td>
+      <td class="amount-budget budget-editable" title="Clic para editar" onclick="editOpCost(this,${i})">$${row.amount.toFixed(2)}</td>
+      <td><span class="op-cost-remove" onclick="removeOpCost(${i})" title="Eliminar">✕</span></td>
+    </tr>`).join('');
+
+  const monthly = opState.opCosts.reduce((s, r) => s + (r.amount || 0), 0);
+  const annual = monthly * 12;
+  document.getElementById('opCostsMonthlyTotal').textContent = '$' + monthly.toFixed(2);
+  document.getElementById('opCostsAnnualTotal').textContent = '$' + annual.toFixed(2);
+  document.getElementById('opStatMonthly').textContent = '$' + monthly.toFixed(0);
+  document.getElementById('opStatAnnual').textContent = '$' + annual.toFixed(0) + '/año';
+}
+
+function editOpCost(cell, i) {
+  const current = opState.opCosts[i].amount.toFixed(2);
+  cell.innerHTML = `
+    <div class="budget-edit-wrap">
+      <span style="color:var(--text-muted);font-size:11px">$</span>
+      <input class="budget-inline-input" type="number" id="oci${i}" value="${current}" min="0" step="0.01"
+        onkeydown="if(event.key==='Enter')confirmOpCost(${i});if(event.key==='Escape')renderOpCosts();" />
+      <button class="budget-btn budget-btn-ok" onclick="confirmOpCost(${i})" title="Guardar">✓</button>
+    </div>`;
+  const inp = document.getElementById(`oci${i}`);
+  inp.focus(); inp.select();
+}
+
+function confirmOpCost(i) {
+  const inp = document.getElementById(`oci${i}`);
+  if (!inp) return;
+  const val = parseFloat(inp.value);
+  if (!isNaN(val) && val >= 0) { opState.opCosts[i].amount = val; saveOps(); }
+  renderOpCosts();
+}
+
+function addOpCost() {
+  const labelInp = document.getElementById('opCostLabel');
+  const amountInp = document.getElementById('opCostAmount');
+  const label = labelInp.value.trim();
+  const amount = parseFloat(amountInp.value);
+  if (!label || isNaN(amount) || amount < 0) return;
+  opState.opCosts.push({ label, amount });
+  labelInp.value = '';
+  amountInp.value = '';
+  renderOpCosts();
+  saveOps();
+}
+
+function removeOpCost(i) {
+  opState.opCosts.splice(i, 1);
+  renderOpCosts();
+  saveOps();
+}
+
+// ── Cumplimiento recurrente (anuales) ──
+function renderGovRecurring() {
+  const el = document.getElementById('govRecurringList');
+  el.innerHTML = GOV_RECURRING_ITEMS.map((item, i) => {
+    const done = opState.govDone[i];
+    return `<div class="step-row">
+      <div class="step-check${done ? ' done' : ''}" onclick="toggleGovDone(${i})"></div>
+      <div class="step-text">
+        <div class="step-label${done ? ' done' : ''}">${item.label}</div>
+        <div class="step-detail">${item.detail}</div>
+      </div>
+      <div class="step-cost cost-paid">${item.cost}</div>
+    </div>`;
+  }).join('');
+}
+
+function toggleGovDone(i) {
+  opState.govDone[i] = !opState.govDone[i];
+  renderGovRecurring();
+  saveOps();
+}
+
+function initOperacion() {
+  renderLlcStatus();
+  renderGoal();
+  renderOpCosts();
+  renderGovRecurring();
+  renderSuppliersView();
+}
+
+// ══════════════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════════════
 function addStepNumbers() {
@@ -1645,6 +2028,10 @@ VENTAJAS DE ESTA DECISIÓN:
 
   const raw = localStorage.getItem('wlstonveil_v2');
   document.getElementById('lastSaved').textContent = raw ? 'Datos restaurados' : 'Nuevo proyecto';
+
+  initOperacion();
+  const savedTab = localStorage.getItem('wlstonveil_active_tab') || 'roadmap';
+  switchTab(savedTab);
 }
 
 init();
