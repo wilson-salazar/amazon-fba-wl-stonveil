@@ -1801,13 +1801,22 @@ function initNotes() {
 // ══════════════════════════════════════════════
 //  TAB SWITCHING
 // ══════════════════════════════════════════════
-function switchTab(name) {
+function switchTab(name, opts) {
   document.getElementById('tab-roadmap').classList.toggle('hidden', name !== 'roadmap');
   document.getElementById('tab-operacion').classList.toggle('hidden', name !== 'operacion');
   document.getElementById('tabbtn-roadmap').classList.toggle('active', name === 'roadmap');
   document.getElementById('tabbtn-operacion').classList.toggle('active', name === 'operacion');
   localStorage.setItem('wlstonveil_active_tab', name);
+  if (!opts || !opts.skipHash) {
+    if (location.hash.replace('#', '') !== name) location.hash = name;
+  }
 }
+
+// Permite navegar con el botón atrás/adelante del navegador y compartir un link directo a una pestaña
+window.addEventListener('hashchange', function () {
+  const name = location.hash.replace('#', '');
+  if (name === 'roadmap' || name === 'operacion') switchTab(name, { skipHash: true });
+});
 
 // ══════════════════════════════════════════════
 //  TAB OPERACIÓN — STATE
@@ -2075,7 +2084,10 @@ VENTAJAS DE ESTA DECISIÓN:
   document.getElementById('lastSaved').textContent = raw ? 'Datos restaurados' : 'Nuevo proyecto';
 
   initOperacion();
-  const savedTab = localStorage.getItem('wlstonveil_active_tab') || 'roadmap';
+  const hashTab = location.hash.replace('#', '');
+  const savedTab = (hashTab === 'roadmap' || hashTab === 'operacion')
+    ? hashTab
+    : (localStorage.getItem('wlstonveil_active_tab') || 'roadmap');
   switchTab(savedTab);
 }
 
