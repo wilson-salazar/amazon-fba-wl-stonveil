@@ -561,6 +561,31 @@
   .empty-note {
     font-size: 12px; color: var(--text-muted); padding: 8px 0;
   }
+
+  /* ── LOGISTICS FLOW ── */
+  .logistics-flow-title {
+    font-size: 11px; text-transform: uppercase; letter-spacing: .5px;
+    color: var(--text-muted); margin: 18px 0 10px; padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+  .logistics-flow-row {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 12px;
+  }
+  .logistics-flow-step {
+    background: var(--bg-input); border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm); padding: 6px 12px; font-size: 12px;
+    font-weight: 600; color: var(--text-secondary);
+  }
+  .logistics-flow-step-highlight {
+    border-color: var(--accent-amber); color: var(--accent-amber);
+    background: var(--accent-amber-dim);
+  }
+  .logistics-flow-arrow { color: var(--text-muted); font-size: 14px; }
+  .logistics-flow-list {
+    margin: 0; padding-left: 18px; font-size: 12px; color: var(--text-secondary); line-height: 1.6;
+  }
+  .logistics-flow-list li { margin-bottom: 6px; }
+  .logistics-flow-list li:last-child { margin-bottom: 0; }
 </style>
 </head>
 <body>
@@ -1233,6 +1258,21 @@
           Trátalo como una fase de aprendizaje con fecha límite (3–6 meses), no como el negocio final.
         </p>
         <div class="steps-list" id="arbitrageStrategyList"><!-- injected --></div>
+
+        <div class="logistics-flow-title">Flujo logístico — a dónde envías la mercancía</div>
+        <div class="logistics-flow-row">
+          <div class="logistics-flow-step">Tienda online</div>
+          <div class="logistics-flow-arrow">→</div>
+          <div class="logistics-flow-step logistics-flow-step-highlight">Prep Center (Florida)</div>
+          <div class="logistics-flow-arrow">→</div>
+          <div class="logistics-flow-step">Centro de cumplimiento Amazon (FC)</div>
+        </div>
+        <ul class="logistics-flow-list">
+          <li><strong>Nunca envías directo a Amazon.</strong> El producto llega tal cual lo vende la tienda — sin FNSKU y sin empaque válido para FBA.</li>
+          <li>Dirección de envío en cada compra: la del <strong>Prep Center</strong> — nunca tu Virtual Mailbox ni tu casa en Colombia.</li>
+          <li>El Prep Center recibe, inspecciona, etiqueta con el FNSKU (generado en el Shipping Plan de Seller Central) y empaca según las reglas de Amazon.</li>
+          <li>Con el Shipping Plan ya creado, el Prep Center despacha el lote hacia el FC que Amazon asigne.</li>
+        </ul>
       </div>
 
       <!-- META FINANCIERA -->
