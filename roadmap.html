@@ -1224,6 +1224,17 @@
         <div class="steps-list" id="llcStatusList"><!-- injected --></div>
       </div>
 
+      <!-- ESTRATEGIA DE ARRANQUE: ARBITRAJE → WHOLESALE -->
+      <div class="card">
+        <div class="card-title">Estrategia de arranque: Arbitraje → Wholesale</div>
+        <p style="font-size:12px;color:var(--text-secondary);margin:0 0 14px;line-height:1.65;">
+          El curso recomienda arrancar con <strong style="color:var(--text-primary)">Online Arbitrage (OA)</strong> antes de saltar a Wholesale: capital mínimo, aprendes el sistema completo de Amazon con riesgo bajo, y generas historial de cuenta.
+          ⚠️ Operando desde Colombia, <strong style="color:var(--accent-amber)">Online Arbitrage tiene más sentido que Retail Arbitrage</strong> — compras online y envías directo al Prep Center en Florida, sin necesitar ir físicamente a tiendas en EE.UU.
+          Trátalo como una fase de aprendizaje con fecha límite (3–6 meses), no como el negocio final.
+        </p>
+        <div class="steps-list" id="arbitrageStrategyList"><!-- injected --></div>
+      </div>
+
       <!-- META FINANCIERA -->
       <div class="card">
         <div class="card-title">Meta financiera — Independencia total</div>
@@ -1809,6 +1820,15 @@ const LLC_STATUS_LABELS = [
   'Primera venta realizada',
 ];
 
+const ARBITRAGE_STRATEGY_ITEMS = [
+  { label: 'Herramientas de escaneo (Scoutify, Bird.Tool o Seller Amp)', detail: 'Para verificar al instante precio, BSR, competencia y restricciones de un producto antes de comprarlo.' },
+  { label: 'Criterios de selección definidos', detail: 'ROI mínimo 30–50% tras tarifas de Amazon, BSR razonable, idealmente menos de 10 vendedores en el listado.' },
+  { label: 'Primeras fuentes de Online Arbitrage identificadas', detail: 'Sitios con descuentos, cupones y ofertas flash que envíen a EE.UU. — compra desde Colombia, envío directo al Prep Center en Florida.' },
+  { label: 'Primeros 5–10 productos comprados (cantidades pequeñas)', detail: '2–5 unidades por producto para probar sin arriesgar mucho capital.' },
+  { label: 'Reinversión de ganancias los primeros 2–3 meses', detail: 'No retirar nada — repetir compra de lo que sí funcionó y llevar registro de qué productos vendieron.' },
+  { label: 'Cuenta con historial y buena salud para el salto a Wholesale', detail: 'Varios meses de ventas activas, categorías entendidas, capital acumulado — listo para el modelo Wholesale definitivo.' },
+];
+
 const GOV_RECURRING_ITEMS = [
   { label: 'Florida Annual Report', detail: 'Vence antes del 1 de mayo — sunbiz.org', cost: '~$138' },
   { label: 'Form 5472 + 1120 (IRS, con CPA)', detail: 'Vence 15 de abril · ⚠️ multa $25,000 si no se presenta', cost: '~$550' },
@@ -1826,6 +1846,7 @@ const OP_COSTS_DEFAULT = [
 
 let opState = JSON.parse(localStorage.getItem('wlstonveil_ops_v1') || 'null') || {
   llcStatus: LLC_STATUS_LABELS.map(() => false),
+  arbitrageDone: ARBITRAGE_STRATEGY_ITEMS.map(() => false),
   goalTarget: 15000,
   currentProfit: 0,
   opCosts: OP_COSTS_DEFAULT.map(r => ({ ...r })),
@@ -1833,6 +1854,8 @@ let opState = JSON.parse(localStorage.getItem('wlstonveil_ops_v1') || 'null') ||
 };
 // Migraciones defensivas
 while (opState.llcStatus.length < LLC_STATUS_LABELS.length) opState.llcStatus.push(false);
+if (!Array.isArray(opState.arbitrageDone)) opState.arbitrageDone = ARBITRAGE_STRATEGY_ITEMS.map(() => false);
+while (opState.arbitrageDone.length < ARBITRAGE_STRATEGY_ITEMS.length) opState.arbitrageDone.push(false);
 while (opState.govDone.length < GOV_RECURRING_ITEMS.length) opState.govDone.push(false);
 if (!Array.isArray(opState.opCosts) || opState.opCosts.length === 0) opState.opCosts = OP_COSTS_DEFAULT.map(r => ({ ...r }));
 
@@ -1857,6 +1880,27 @@ function renderLlcStatus() {
 function toggleLlcStatus(i) {
   opState.llcStatus[i] = !opState.llcStatus[i];
   renderLlcStatus();
+  saveOps();
+}
+
+// ── Estrategia de arranque: Arbitraje → Wholesale ──
+function renderArbitrageStrategy() {
+  const el = document.getElementById('arbitrageStrategyList');
+  el.innerHTML = ARBITRAGE_STRATEGY_ITEMS.map((item, i) => {
+    const done = opState.arbitrageDone[i];
+    return `<div class="step-row">
+      <div class="step-check${done ? ' done' : ''}" onclick="toggleArbitrageStrategy(${i})"></div>
+      <div class="step-text">
+        <div class="step-label${done ? ' done' : ''}">${item.label}</div>
+        <div class="step-detail">${item.detail}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleArbitrageStrategy(i) {
+  opState.arbitrageDone[i] = !opState.arbitrageDone[i];
+  renderArbitrageStrategy();
   saveOps();
 }
 
@@ -1966,6 +2010,7 @@ function toggleGovDone(i) {
 
 function initOperacion() {
   renderLlcStatus();
+  renderArbitrageStrategy();
   renderGoal();
   renderOpCosts();
   renderGovRecurring();
