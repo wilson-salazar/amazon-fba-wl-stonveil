@@ -588,6 +588,9 @@
   }
   .logistics-flow-list li { margin-bottom: 6px; }
   .logistics-flow-list li:last-child { margin-bottom: 0; }
+  .logistics-flow-note {
+    margin: 12px 0 0; font-size: 12px; color: var(--text-muted); line-height: 1.6;
+  }
 </style>
 </head>
 <body>
@@ -1275,6 +1278,16 @@
           <li>El Prep Center recibe, inspecciona, etiqueta con el FNSKU (generado en el Shipping Plan de Seller Central) y empaca según las reglas de Amazon.</li>
           <li>Con el Shipping Plan ya creado, el Prep Center despacha el lote hacia el FC que Amazon asigne.</li>
         </ul>
+
+        <div class="logistics-flow-title">Orden de pasos — cuándo poner el SKU</div>
+        <ol class="logistics-flow-list">
+          <li><strong>Elegir el producto</strong> y verificar que el UPC del empaque coincide con el del listado de Amazon.</li>
+          <li><strong>Crear la oferta en Seller Central</strong> (buscar el ASIN → Vender este producto). Aquí va el <strong>SKU</strong>, el precio y la condición, con envío por Amazon (FBA). Hazlo antes de comprar: así ves si el producto está bloqueado.</li>
+          <li><strong>Comprar al proveedor</strong>, con la dirección del Prep Center.</li>
+          <li><strong>Crear el plan de envío</strong> (Send to Amazon). Amazon genera las etiquetas FNSKU, ya vinculadas a tu SKU.</li>
+          <li><strong>Enviar el plan y las etiquetas al Prep Center.</strong> Ellos etiquetan, empacan y despachan al centro de Amazon.</li>
+        </ol>
+        <p class="logistics-flow-note">Si dejas el campo SKU vacío en el paso 2, Amazon asigna uno automáticamente en ese momento. El SKU siempre existe antes del plan de envío. Por lo general no se puede cambiar una vez creado: piénsalo antes de guardar.</p>
       </div>
 
       <!-- META FINANCIERA -->
