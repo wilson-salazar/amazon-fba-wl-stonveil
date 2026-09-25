@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>Amazon Seller</title>
+  <rect width="64" height="64" rx="14" fill="#131a22"/>
+  <path d="M16 25.5 32 17l16 8.5v20L32 54 16 45.5v-20Z" fill="#ff9900"/>
+  <path d="m16 25.5 16 9 16-9M32 34.5V54" fill="none" stroke="#f6b44a" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M23 40c5 4.2 13 4.2 18 0" fill="none" stroke="#131a22" stroke-width="3.8" stroke-linecap="round"/>
+  <path d="m39.1 37.6 3.3 2.7-4.2 1.1" fill="#131a22"/>
+</svg>
