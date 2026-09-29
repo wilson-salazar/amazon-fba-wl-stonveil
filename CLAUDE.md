@@ -31,13 +31,14 @@ Este archivo da contexto completo a Claude para continuar asistiendo con el proy
 | Nombre LLC | WL Stonveil LLC |
 | Estado de registro | **Florida** (decisión tomada, antes se evaluó Wyoming) |
 | Servicio de formación | **Bizee Plan Estándar** — $324 total ($199 Bizee + $125 fee FL) |
-| Registered Agent | Incluido en Bizee año 1, $119/año desde año 2 |
+| Registered Agent | Incluido en Bizee año 1, $119/año desde año 2 (TRP cotizó $125/año — se mantiene con Bizee) |
 | Virtual Address | Incluido en Bizee 1er mes, luego servicio externo ~$10–15/mes |
 | Teléfono EE.UU. | Google Voice (gratis, requiere VPN IP americana al registrar) |
 | Cuenta bancaria | Wise Business o Relay (primera opción, friendly no residentes) |
 | Prep Center | Florida (a definir proveedor) |
 | Código NAICS | 455219 / 541613 / 454110 (confirmar con CPA cuál usar en SS-4) |
-| Contador / Form 5472+1120 | **TRP Accounting Services LLC** (Tahaira A. Rivera, CAA, MBA — no es CPA) — cotizado $275 (1120) + $150 (5472) = $425/año. Reemplaza el estimado genérico de $550/año |
+| Contador / Form 5472+1120 | **TRP Accounting Services LLC** (Tahaira A. Rivera, CAA, MBA — no es CPA) — confirmado $275 (1120) + $150 (5472) = $425/año. Precio no garantizado, se recotiza cada año. Solo se contrata esto con TRP: RA y Annual Report se manejan aparte (ver fila siguiente) |
+| Florida Annual Report | Lo presenta Wilson mismo en sunbiz.org — $138.75/año, ventana 1 enero–1 mayo, recargo $400 si se pasa. TRP cotizó $200 por hacerlo — no se contrata, no vale la pena |
 
 ---
 
@@ -135,11 +136,11 @@ Este archivo da contexto completo a Claude para continuar asistiendo con el proy
 
 - [ ] Consultar CPA antes de iniciar: confirmar código NAICS, estructura fiscal, si necesita ITIN
 - [ ] Confirmar con CPA si el Prep Center en FL genera obligación de reporte adicional
-- [ ] Con TRP Accounting: confirmar por escrito si el $550 de "Creación de entidad" incluye el fee estatal de $125 (la propuesta lo dice pero contradice la Sección 3, que excluye filing fees salvo indicación expresa)
-- [ ] Con TRP Accounting: el Annual Report de Florida aparece EXCLUIDO en la Sección 3 de su propuesta — si Tahaira ofreció incluirlo de palabra, pedir que quede por escrito
-- [ ] Con TRP Accounting: preguntar precio de Registered Agent si TRP actúa como tal (no viene definido en la propuesta)
-- [ ] Con TRP Accounting: preguntar si existe opción de contabilidad semestral en vez de trimestral ($150/trimestre) — no es obligación legal, solo recomendable
-- [ ] Decisión recomendada: formar la LLC con Bizee ($324, más barato que TRP) + BOI Report gratis por Wilson mismo + contratar a TRP solo para Form 1120+5472 ($425/año)
+- [x] Con TRP Accounting: confirmado por escrito — el $550 de "Creación de entidad" SÍ incluye el fee estatal de $125
+- [x] Con TRP Accounting: confirmado — el Annual Report NO está incluido en ningún paquete de TRP. Su servicio para hacerlo cuesta $200 (no se contrata)
+- [x] Con TRP Accounting: confirmado — Registered Agent con TRP cuesta $125/año (se mantiene con Bizee, más barato)
+- [ ] Con TRP Accounting: pendiente su cotización de contabilidad semestral — Wilson le explicó que Amazon es Marketplace Facilitator en FL (recauda y remite el Sales Tax automáticamente), a la espera de su respuesta con el nuevo precio
+- [x] **Decisión final:** LLC y RA con Bizee ($324 + $119/año desde año 2); BOI Report y Annual Report los hace Wilson mismo (gratis + $138.75/año respectivamente); TRP Accounting solo para Form 1120+5472 ($425/año, precio no garantizado, se recotiza cada año)
 - [ ] Elegir proveedor de Prep Center en Florida
 - [ ] Elegir servicio de Virtual Mailbox para mes 2 en adelante
 - [ ] Registrar número Google Voice (requiere VPN con IP americana)
