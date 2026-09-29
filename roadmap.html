@@ -938,9 +938,9 @@
               <div class="step-check" onclick="toggleStep(4,0)" id="chk-4-0"></div>
               <div class="step-text">
                 <div class="step-label" id="lbl-4-0">Florida Annual Report</div>
-                <div class="step-detail">Lo haces tú mismo en sunbiz.org — toma 10 minutos. Presentar cada año antes del 1 de mayo. Bizee también lo puede hacer por ti por ~$100 adicional.</div>
+                <div class="step-detail">Lo haces tú mismo en sunbiz.org con el Document Number de la LLC — toma 10-15 minutos: verificar datos, pagar $138.75. Ventana: 1 de enero al 1 de mayo cada año. ⚠️ Recargo de $400 si te pasas de la fecha. TRP Accounting cotizó $200 por hacerlo — no vale la pena pagarlo por un trámite tan simple.</div>
               </div>
-              <div class="step-cost cost-paid">$60/año</div>
+              <div class="step-cost cost-paid">$138.75/año</div>
             </div>
             <div class="step-row">
               <div class="step-check" onclick="toggleStep(4,1)" id="chk-4-1"></div>
@@ -1098,15 +1098,15 @@
           <div class="oblig-freq freq-anual">📆 Anuales</div>
           <div class="oblig-row">
             <div>
-              <div class="oblig-name">Florida Annual Report — sunbiz.org</div>
-              <div class="oblig-note">Vence antes del 1 de mayo cada año</div>
+              <div class="oblig-name">Florida Annual Report — sunbiz.org (lo hace Wilson)</div>
+              <div class="oblig-note">Ventana: 1 enero–1 mayo · ⚠️ recargo $400 si se pasa la fecha · TRP cotizó $200 por hacerlo — no vale la pena</div>
             </div>
-            <div class="oblig-cost">~$138</div>
+            <div class="oblig-cost">$138.75</div>
           </div>
           <div class="oblig-row">
             <div>
-              <div class="oblig-name">Form 5472 + 1120 — IRS</div>
-              <div class="oblig-note">15 de abril · ⚠️ Multa $25,000 si no se presenta · cotizado con TRP Accounting: $275 (1120) + $150 (5472)</div>
+              <div class="oblig-name">Form 5472 + 1120 — IRS (con TRP Accounting)</div>
+              <div class="oblig-note">15 de abril · ⚠️ Multa $25,000 si no se presenta · $275 (1120) + $150 (5472) · precio no garantizado, se recotiza cada año</div>
             </div>
             <div class="oblig-cost">$425</div>
           </div>
@@ -1163,15 +1163,15 @@
           <div class="oblig-freq freq-anual">📆 Anuales</div>
           <div class="oblig-row">
             <div>
-              <div class="oblig-name">Florida Annual Report</div>
-              <div class="oblig-note">Vence antes del 1 de mayo — sunbiz.org</div>
+              <div class="oblig-name">Florida Annual Report (lo hace Wilson)</div>
+              <div class="oblig-note">Ventana 1 enero–1 mayo — sunbiz.org · ⚠️ recargo $400 si se pasa</div>
             </div>
-            <div class="oblig-cost">~$138</div>
+            <div class="oblig-cost">$138.75</div>
           </div>
           <div class="oblig-row">
             <div>
               <div class="oblig-name">Registered Agent (Bizee)</div>
-              <div class="oblig-note">Gratis año 1, $119/año desde año 2</div>
+              <div class="oblig-note">Gratis año 1, $119/año desde año 2 — más barato que TRP ($125/año)</div>
             </div>
             <div class="oblig-cost">$119</div>
           </div>
@@ -1450,7 +1450,7 @@ const COST_ROWS = [
   { label: 'Articles of Organization',     budget: 125    },
   { label: 'EIN (servicio opcional)',       budget: 100    },
   { label: 'Amazon Seller Central',        budget: 39.99  },
-  { label: 'Florida Annual Report',        budget: 138    },
+  { label: 'Florida Annual Report',        budget: 138.75 },
   { label: 'TRP Accounting (1120+5472)',  budget: 425    },
   { label: 'Otros',                        budget: 100    },
 ];
@@ -1894,9 +1894,9 @@ const ARBITRAGE_STRATEGY_ITEMS = [
 ];
 
 const GOV_RECURRING_ITEMS = [
-  { label: 'Florida Annual Report', detail: 'Vence antes del 1 de mayo — sunbiz.org', cost: '~$138' },
-  { label: 'Form 5472 + 1120 (IRS, con TRP Accounting)', detail: 'Vence 15 de abril · ⚠️ multa $25,000 si no se presenta · $275 (1120) + $150 (5472), cotizado', cost: '$425' },
-  { label: 'Renovación Registered Agent (Bizee)', detail: 'Renovación anual del servicio', cost: '$119' },
+  { label: 'Florida Annual Report (lo hace Wilson)', detail: 'Ventana 1 enero–1 mayo — sunbiz.org · ⚠️ recargo $400 si se pasa · TRP cotizó $200, no vale la pena', cost: '$138.75' },
+  { label: 'Form 5472 + 1120 (IRS, con TRP Accounting)', detail: 'Vence 15 de abril · ⚠️ multa $25,000 si no se presenta · $275 (1120) + $150 (5472) · precio no garantizado, se recotiza cada año', cost: '$425' },
+  { label: 'Renovación Registered Agent (Bizee)', detail: 'Renovación anual · más barato que TRP ($125/año)', cost: '$119' },
 ];
 
 const OP_COSTS_DEFAULT = [
@@ -2118,8 +2118,9 @@ function init() {
 → Bizee Plan Estándar: $324 total ($199 Bizee + $125 fee Florida)
 → RA año 1: gratis | RA año 2+: $119/año
 → Virtual Address: gratis 1er mes, luego ~$10–15/mes con servicio externo
-→ Reporte anual Florida: ~$138/año (vence antes del 1 de mayo cada año)
+→ Reporte anual Florida: $138.75/año (ventana 1 enero–1 mayo; lo hace Wilson mismo, TRP cotizó $200 y no vale la pena)
 → Resale Certificate: gratis, tramitar en floridarevenue.com
+→ Contador: TRP Accounting Services LLC (Tahaira Rivera, CAA/MBA) — solo Form 1120+5472, $275+$150=$425/año (precio no garantizado). RA y Annual Report se hacen con Bizee/Wilson, no con TRP
 
 VENTAJAS DE ESTA DECISIÓN:
 → Un solo estado — sin trámite de Foreign LLC Registration
