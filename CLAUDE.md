@@ -33,7 +33,7 @@ Este archivo da contexto completo a Claude para continuar asistiendo con el proy
 | Servicio de formación | **Bizee Plan Estándar** — $324 total ($199 Bizee + $125 fee FL) |
 | Registered Agent | Incluido en Bizee año 1, $119/año desde año 2 (TRP cotizó $125/año — se mantiene con Bizee) |
 | Virtual Address | Incluido en Bizee 1er mes, luego servicio externo ~$10–15/mes |
-| Teléfono EE.UU. | Google Voice (gratis, requiere VPN IP americana al registrar) |
+| Teléfono EE.UU. | **Sonetel** (gratis o $9.95/mes, sin VPN) — se descartó Google Voice y Grasshopper por requerir VPN/estar bloqueados fuera de EE.UU. Alternativa: Quo (antes OpenPhone), desde $19/mes |
 | Cuenta bancaria | Wise Business o Relay (primera opción, friendly no residentes) |
 | Prep Center | Florida (a definir proveedor) |
 | Código NAICS | 455219 / 541613 / 454110 (confirmar con CPA cuál usar en SS-4) |
@@ -60,7 +60,7 @@ Este archivo da contexto completo a Claude para continuar asistiendo con el proy
 2. Contratar Bizee Plan Estándar ($324)
 3. Filing Articles of Organization (incluido Bizee, sunbiz.org)
 4. Redactar Operating Agreement — estructura Manager-Managed
-5. Obtener número teléfono EE.UU. — Google Voice (VPN necesaria al registrar)
+5. Obtener número teléfono EE.UU. — Sonetel (sin VPN, gratis o $9.95/mes). Google Voice y Grasshopper descartados (requieren VPN/bloqueados fuera de EE.UU.)
 6. Obtener Virtual Mailbox — 1er mes incluido en Bizee, luego Anytime Mailbox/PostScan Mail
 
 ### Fase 2: Obtener EIN del IRS (Semanas 2–4)
@@ -143,7 +143,7 @@ Este archivo da contexto completo a Claude para continuar asistiendo con el proy
 - [x] **Decisión final:** LLC y RA con Bizee ($324 + $119/año desde año 2); BOI Report y Annual Report los hace Wilson mismo (gratis + $138.75/año respectivamente); TRP Accounting solo para Form 1120+5472 ($425/año, precio no garantizado, se recotiza cada año)
 - [ ] Elegir proveedor de Prep Center en Florida
 - [ ] Elegir servicio de Virtual Mailbox para mes 2 en adelante
-- [ ] Registrar número Google Voice (requiere VPN con IP americana)
+- [ ] Registrar número de teléfono con Sonetel (probar plan gratis primero y confirmar que recibe el SMS de verificación de Amazon Seller Central antes de pagar Premium/Quo)
 
 ---
 
