@@ -37,6 +37,7 @@ Este archivo da contexto completo a Claude para continuar asistiendo con el proy
 | Cuenta bancaria | Wise Business o Relay (primera opción, friendly no residentes) |
 | Prep Center | Florida (a definir proveedor) |
 | Código NAICS | 455219 / 541613 / 454110 (confirmar con CPA cuál usar en SS-4) |
+| Contador / Form 5472+1120 | **TRP Accounting Services LLC** (Tahaira A. Rivera, CAA, MBA — no es CPA) — cotizado $275 (1120) + $150 (5472) = $425/año. Reemplaza el estimado genérico de $550/año |
 
 ---
 
@@ -134,6 +135,11 @@ Este archivo da contexto completo a Claude para continuar asistiendo con el proy
 
 - [ ] Consultar CPA antes de iniciar: confirmar código NAICS, estructura fiscal, si necesita ITIN
 - [ ] Confirmar con CPA si el Prep Center en FL genera obligación de reporte adicional
+- [ ] Con TRP Accounting: confirmar por escrito si el $550 de "Creación de entidad" incluye el fee estatal de $125 (la propuesta lo dice pero contradice la Sección 3, que excluye filing fees salvo indicación expresa)
+- [ ] Con TRP Accounting: el Annual Report de Florida aparece EXCLUIDO en la Sección 3 de su propuesta — si Tahaira ofreció incluirlo de palabra, pedir que quede por escrito
+- [ ] Con TRP Accounting: preguntar precio de Registered Agent si TRP actúa como tal (no viene definido en la propuesta)
+- [ ] Con TRP Accounting: preguntar si existe opción de contabilidad semestral en vez de trimestral ($150/trimestre) — no es obligación legal, solo recomendable
+- [ ] Decisión recomendada: formar la LLC con Bizee ($324, más barato que TRP) + BOI Report gratis por Wilson mismo + contratar a TRP solo para Form 1120+5472 ($425/año)
 - [ ] Elegir proveedor de Prep Center en Florida
 - [ ] Elegir servicio de Virtual Mailbox para mes 2 en adelante
 - [ ] Registrar número Google Voice (requiere VPN con IP americana)

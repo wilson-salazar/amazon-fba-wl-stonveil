@@ -1052,7 +1052,7 @@
               <option value="2">EIN (servicio)</option>
               <option value="3">Amazon Seller Central</option>
               <option value="4">Florida Annual Report</option>
-              <option value="5">CPA / Form 5472</option>
+              <option value="5">TRP Accounting / Form 5472+1120</option>
               <option value="6">Otros</option>
             </select>
           </div>
@@ -1106,9 +1106,9 @@
           <div class="oblig-row">
             <div>
               <div class="oblig-name">Form 5472 + 1120 — IRS</div>
-              <div class="oblig-note">15 de abril · ⚠️ Multa $25,000 si no se presenta · con CPA</div>
+              <div class="oblig-note">15 de abril · ⚠️ Multa $25,000 si no se presenta · cotizado con TRP Accounting: $275 (1120) + $150 (5472)</div>
             </div>
-            <div class="oblig-cost">~$550</div>
+            <div class="oblig-cost">$425</div>
           </div>
         </div>
 
@@ -1177,10 +1177,10 @@
           </div>
           <div class="oblig-row">
             <div>
-              <div class="oblig-name">Form 5472 + 1120 (CPA)</div>
-              <div class="oblig-note">⚠️ Multa $25,000 si no se presenta</div>
+              <div class="oblig-name">Form 5472 + 1120 (TRP Accounting)</div>
+              <div class="oblig-note">⚠️ Multa $25,000 si no se presenta · $275 (1120) + $150 (5472)</div>
             </div>
-            <div class="oblig-cost">~$550</div>
+            <div class="oblig-cost">$425</div>
           </div>
         </div>
 
@@ -1451,7 +1451,7 @@ const COST_ROWS = [
   { label: 'EIN (servicio opcional)',       budget: 100    },
   { label: 'Amazon Seller Central',        budget: 39.99  },
   { label: 'Florida Annual Report',        budget: 138    },
-  { label: 'CPA / Form 5472',             budget: 550    },
+  { label: 'TRP Accounting (1120+5472)',  budget: 425    },
   { label: 'Otros',                        budget: 100    },
 ];
 
@@ -1895,7 +1895,7 @@ const ARBITRAGE_STRATEGY_ITEMS = [
 
 const GOV_RECURRING_ITEMS = [
   { label: 'Florida Annual Report', detail: 'Vence antes del 1 de mayo — sunbiz.org', cost: '~$138' },
-  { label: 'Form 5472 + 1120 (IRS, con CPA)', detail: 'Vence 15 de abril · ⚠️ multa $25,000 si no se presenta', cost: '~$550' },
+  { label: 'Form 5472 + 1120 (IRS, con TRP Accounting)', detail: 'Vence 15 de abril · ⚠️ multa $25,000 si no se presenta · $275 (1120) + $150 (5472), cotizado', cost: '$425' },
   { label: 'Renovación Registered Agent (Bizee)', detail: 'Renovación anual del servicio', cost: '$119' },
 ];
 
