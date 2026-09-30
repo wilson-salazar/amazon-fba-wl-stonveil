@@ -119,6 +119,9 @@ Este archivo da contexto completo a Claude para continuar asistiendo con el proy
 - **Manager-Managed LLC** — Wilson es Member (dueño), esposa es Manager (operadora)
 - **Foreign LLC** — registro de LLC en un estado distinto al de formación (se evitó eligiendo FL)
 - **CPA** — Contador público especializado en no residentes con LLC, indispensable para Form 5472
+- **USTB (US Trade or Business)** — cuando un extranjero se considera que "hace negocios" dentro de EE.UU. (no solo papeleo). Si aplica, sí se debe pagar impuesto federal real sobre las ganancias, no solo el Form 5472/1120 informativo
+- **ECI (Effectively Connected Income)** — la ganancia conectada a un USTB; se declara vía Form 1040-NR del dueño (persona física), a tarifas progresivas
+- **Excepción del agente independiente** — si el extranjero usa terceros independientes que dan el mismo servicio a muchos clientes no relacionados (ej. Amazon FBA, Prep Center) y no tiene empleados/oficina propia en EE.UU., generalmente no se considera USTB. Es la postura que dio TRP Accounting para el caso de Wilson (sin explicar el fundamento aún) — ver pendiente arriba
 
 ---
 
@@ -139,8 +142,9 @@ Este archivo da contexto completo a Claude para continuar asistiendo con el proy
 - [x] Con TRP Accounting: confirmado por escrito — el $550 de "Creación de entidad" SÍ incluye el fee estatal de $125
 - [x] Con TRP Accounting: confirmado — el Annual Report NO está incluido en ningún paquete de TRP. Su servicio para hacerlo cuesta $200 (no se contrata)
 - [x] Con TRP Accounting: confirmado — Registered Agent con TRP cuesta $125/año (se mantiene con Bizee, más barato)
-- [ ] Con TRP Accounting: pendiente su cotización de contabilidad semestral — Wilson le explicó que Amazon es Marketplace Facilitator en FL (recauda y remite el Sales Tax automáticamente), a la espera de su respuesta con el nuevo precio
-- [x] **Decisión final:** LLC y RA con Bizee ($324 + $119/año desde año 2); BOI Report y Annual Report los hace Wilson mismo (gratis + $138.75/año respectivamente); TRP Accounting solo para Form 1120+5472 ($425/año, precio no garantizado, se recotiza cada año)
+- [x] Con TRP Accounting: contabilidad semestral cotizada en **$225** — ambigüedad sin resolver del todo: Wilson entiende que es por semestre ($450/año), pendiente de que Tahaira lo ratifique por escrito. QuickBooks Online NO está incluido — lo paga Wilson directo a Intuit (~$38/mes plan Simple Start, $19/mes promo 3 meses). Pendiente: qué plan de QuickBooks necesita Tahaira
+- [ ] **ECI / US Trade or Business:** Wilson preguntó si el modelo FBA (inventario físico en EE.UU.) genera impuesto federal real además del Form 5472/1120. Tahaira respondió que solo aplica la presentación informativa, sin explicar el fundamento. Pendiente pedirle que explique su razonamiento (posible "excepción del agente independiente" — Amazon/Prep Center como terceros independientes). Ver memoria `trp_vs_bizee.md` para el análisis completo
+- [x] **Decisión final:** LLC y RA con Bizee ($324 + $119/año desde año 2); BOI Report y Annual Report los hace Wilson mismo (gratis + $138.75/año respectivamente); TRP Accounting para Form 1120+5472 ($425/año, precio no garantizado) + contabilidad semestral ($225, frecuencia a confirmar)
 - [ ] Elegir proveedor de Prep Center en Florida
 - [ ] Elegir servicio de Virtual Mailbox para mes 2 en adelante
 - [ ] Registrar número de teléfono con Sonetel (probar plan gratis primero y confirmar que recibe el SMS de verificación de Amazon Seller Central antes de pagar Premium/Quo)
