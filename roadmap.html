@@ -588,6 +588,15 @@
   }
   .logistics-flow-list li { margin-bottom: 6px; }
   .logistics-flow-list li:last-child { margin-bottom: 0; }
+  .purchase-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 14px;
+  }
+  .purchase-label {
+    font-size: 10px; text-transform: uppercase; letter-spacing: .5px; color: var(--text-muted);
+  }
+  .purchase-value {
+    font-size: 18px; font-weight: 700; color: var(--text-primary); margin-top: 2px;
+  }
   .logistics-flow-note {
     margin: 12px 0 0; font-size: 12px; color: var(--text-muted); line-height: 1.6;
   }
@@ -1308,6 +1317,39 @@
         </div>
       </div>
 
+      <!-- META DE COMPRAS -->
+      <div class="card">
+        <div class="card-title">Meta de compras mensual — el negocio está en la compra</div>
+        <p style="font-size:12px;color:var(--text-secondary);margin:0 0 14px;line-height:1.65;">
+          Las ventas son consecuencia de las compras: si un mes no compras, el siguiente no vendes. Esta meta se calcula desde tu meta de ganancia y estos dos supuestos. Los valores iniciales son los del curso (ROI 25%–33%, mercancía ≈ 45% de la venta); cámbialos por los tuyos cuando tengas ventas reales.
+        </p>
+        <div class="cost-input-row">
+          <div style="flex:1">
+            <div class="purchase-label" style="margin-bottom:4px;">ROI promedio (%)</div>
+            <input class="cost-input" style="width:100%" id="purchaseRoiInput" type="number" min="1" max="200" step="1" placeholder="ROI promedio (%)" oninput="updatePurchaseAssumptions()" />
+          </div>
+          <div style="flex:1">
+            <div class="purchase-label" style="margin-bottom:4px;">Mercancía (% de la venta)</div>
+            <input class="cost-input" style="width:100%" id="purchaseCostPctInput" type="number" min="1" max="99" step="1" placeholder="Mercancía (% de la venta)" oninput="updatePurchaseAssumptions()" />
+          </div>
+        </div>
+        <div class="purchase-grid">
+          <div><div class="purchase-label">Compras necesarias al mes</div><div class="purchase-value" id="purchaseMonthly">—</div></div>
+          <div><div class="purchase-label">Compras al día</div><div class="purchase-value" id="purchaseDaily">—</div></div>
+          <div><div class="purchase-label">Ventas implícitas al mes</div><div class="purchase-value" id="purchaseSales">—</div></div>
+        </div>
+        <div class="goal-bar-track" style="margin-top:14px;"><div class="goal-bar-fill" id="purchaseBarFill" style="width:0%"></div></div>
+        <div class="goal-stats-row">
+          <span id="purchaseCurrentLabel">$0 comprado este mes</span>
+          <span id="purchaseTargetLabel">meta —</span>
+        </div>
+        <div class="cost-input-row" style="margin-top:14px;">
+          <input class="cost-input" id="purchaseCurrentInput" type="number" min="0" placeholder="Compras de este mes ($)" />
+          <button class="btn-add" onclick="setCurrentPurchases()">Actualizar</button>
+        </div>
+        <p class="logistics-flow-note">Es un flujo mensual, no capital que debas tener junto el primer día: el dinero rota (compras → ventas → reinversión). Con $10,000 rotando una vez al mes comprarías ~$10,000/mes, y la meta se alcanza reinvirtiendo ganancias.</p>
+      </div>
+
       <!-- GASTOS OPERATIVOS -->
       <div class="card">
         <div class="card-title">Gastos operativos mensuales</div>
@@ -1913,10 +1955,16 @@ let opState = JSON.parse(localStorage.getItem('wlstonveil_ops_v1') || 'null') ||
   arbitrageDone: ARBITRAGE_STRATEGY_ITEMS.map(() => false),
   goalTarget: 15000,
   currentProfit: 0,
+  purchaseRoi: 30,
+  purchaseCostPct: 45,
+  currentPurchases: 0,
   opCosts: OP_COSTS_DEFAULT.map(r => ({ ...r })),
   govDone: GOV_RECURRING_ITEMS.map(() => false),
 };
 // Migraciones defensivas
+if (typeof opState.purchaseRoi !== 'number') opState.purchaseRoi = 30;
+if (typeof opState.purchaseCostPct !== 'number') opState.purchaseCostPct = 45;
+if (typeof opState.currentPurchases !== 'number') opState.currentPurchases = 0;
 while (opState.llcStatus.length < LLC_STATUS_LABELS.length) opState.llcStatus.push(false);
 if (!Array.isArray(opState.arbitrageDone)) opState.arbitrageDone = ARBITRAGE_STRATEGY_ITEMS.map(() => false);
 while (opState.arbitrageDone.length < ARBITRAGE_STRATEGY_ITEMS.length) opState.arbitrageDone.push(false);
@@ -1988,6 +2036,52 @@ function setCurrentProfit() {
     opState.currentProfit = val;
     saveOps();
     renderGoal();
+  }
+  inp.value = '';
+}
+
+// ── Meta de compras mensual ──
+const fmtUsd = n => '$' + Math.round(n).toLocaleString('en-US');
+
+function renderPurchaseGoal() {
+  const roi = opState.purchaseRoi;
+  const costPct = opState.purchaseCostPct;
+  const roiInp = document.getElementById('purchaseRoiInput');
+  const costInp = document.getElementById('purchaseCostPctInput');
+  if (document.activeElement !== roiInp) roiInp.value = roi;
+  if (document.activeElement !== costInp) costInp.value = costPct;
+
+  const valid = roi > 0 && costPct > 0 && costPct < 100;
+  const monthly = valid ? opState.goalTarget / (roi / 100) : 0;
+  const daily = monthly / 30;
+  const sales = valid ? monthly / (costPct / 100) : 0;
+  document.getElementById('purchaseMonthly').textContent = valid ? fmtUsd(monthly) : '—';
+  document.getElementById('purchaseDaily').textContent = valid ? fmtUsd(daily) : '—';
+  document.getElementById('purchaseSales').textContent = valid ? fmtUsd(sales) : '—';
+
+  const current = opState.currentPurchases || 0;
+  const pct = monthly > 0 ? Math.min(100, Math.round(current / monthly * 100)) : 0;
+  document.getElementById('purchaseBarFill').style.width = pct + '%';
+  document.getElementById('purchaseCurrentLabel').textContent = `${fmtUsd(current)} comprado este mes`;
+  document.getElementById('purchaseTargetLabel').textContent = valid ? `meta ${fmtUsd(monthly)}` : 'meta —';
+}
+
+function updatePurchaseAssumptions() {
+  const roi = parseFloat(document.getElementById('purchaseRoiInput').value);
+  const costPct = parseFloat(document.getElementById('purchaseCostPctInput').value);
+  if (!isNaN(roi) && roi > 0) opState.purchaseRoi = roi;
+  if (!isNaN(costPct) && costPct > 0 && costPct < 100) opState.purchaseCostPct = costPct;
+  saveOps();
+  renderPurchaseGoal();
+}
+
+function setCurrentPurchases() {
+  const inp = document.getElementById('purchaseCurrentInput');
+  const val = parseFloat(inp.value);
+  if (!isNaN(val) && val >= 0) {
+    opState.currentPurchases = val;
+    saveOps();
+    renderPurchaseGoal();
   }
   inp.value = '';
 }
@@ -2076,6 +2170,7 @@ function initOperacion() {
   renderLlcStatus();
   renderArbitrageStrategy();
   renderGoal();
+  renderPurchaseGoal();
   renderOpCosts();
   renderGovRecurring();
   renderSuppliersView();
