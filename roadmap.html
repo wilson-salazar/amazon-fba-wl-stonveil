@@ -588,6 +588,28 @@
   }
   .logistics-flow-list li { margin-bottom: 6px; }
   .logistics-flow-list li:last-child { margin-bottom: 0; }
+  .tool-row {
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+  }
+  .tool-row:last-of-type { border-bottom: none; }
+  .tool-row.tool-off { opacity: .45; }
+  .tool-info { min-width: 0; flex: 1; }
+  .tool-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+  .tool-meta { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+  .tool-extra { color: var(--text-secondary); }
+  .tool-ctrl { display: flex; gap: 6px; align-items: center; flex: none; }
+  .tool-cost { width: 72px; }
+  .tool-status { width: 112px; }
+  .tool-badge {
+    font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 10px;
+    background: var(--bg-input); color: var(--text-muted); white-space: nowrap;
+  }
+  .tool-summary {
+    display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+    margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border);
+    font-size: 12px; color: var(--text-secondary);
+  }
   .purchase-grid {
     display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 14px;
   }
@@ -1166,6 +1188,13 @@
             </div>
             <div class="oblig-cost">$0–$9.95</div>
           </div>
+          <div class="oblig-row">
+            <div>
+              <div class="oblig-name">Herramientas de software</div>
+              <div class="oblig-note">Keepa (~$53) + SmartScout ya en el plan; el resto está en el radar de la pestaña Operación (Nepeto, Analyzer Tools, Profit Cyclops $2…)</div>
+            </div>
+            <div class="oblig-cost">$53+</div>
+          </div>
         </div>
 
         <div class="oblig-group">
@@ -1366,12 +1395,24 @@
             <span class="cost-total-label">Proyección anual</span>
             <span class="cost-total-val" id="opCostsAnnualTotal" style="color:var(--text-muted)">$0</span>
           </div>
+          <div id="opCostsToolsLine" style="font-size:11px;color:var(--text-muted);"></div>
         </div>
         <div class="cost-input-row" style="margin-top:14px;">
           <input class="cost-input" id="opCostLabel" type="text" placeholder="Nuevo concepto" style="flex:2" />
           <input class="cost-input" id="opCostAmount" type="number" min="0" placeholder="$/mes" />
           <button class="btn-add" onclick="addOpCost()">+ Añadir</button>
         </div>
+      </div>
+
+      <!-- HERRAMIENTAS EN EL RADAR -->
+      <div class="card">
+        <div class="card-title">Herramientas de software — en el radar</div>
+        <p style="font-size:12px;color:var(--text-secondary);margin:0 0 6px;line-height:1.65;">
+          Las que recomienda el curso, con cuándo hacen falta. No contrates todo al inicio: marca <strong style="color:var(--text-primary)">Contratada</strong> solo cuando la pagues, pon su precio real, y se suma al total mensual de arriba.
+        </p>
+        <div id="toolsRadarList"><!-- injected --></div>
+        <div class="tool-summary" id="toolsRadarSummary"></div>
+        <p class="logistics-flow-note">Los precios salen del video y del PDF de afiliados del curso y no están verificados en los sitios oficiales. Son enlaces de afiliado del instructor: compara antes de pagar. Los cupones están en el PDF "1-Links de Descuentos" (guardado solo en tu computadora).</p>
       </div>
     </div>
 
@@ -1950,6 +1991,20 @@ const OP_COSTS_DEFAULT = [
   { label: 'Prep Center (estimado)', amount: 0 },
 ];
 
+// Herramientas del curso (video "herramientas" + PDF de descuentos). Precios sin verificar.
+const TOOLS_RADAR = [
+  { id: 'keepa',         name: 'Keepa',              purpose: 'Historial de precios y ventas',                 when: 'No negociable, siempre',            inExpenses: 'Ya está en los gastos mensuales de arriba' },
+  { id: 'smartscout',    name: 'SmartScout',         purpose: 'Investigar marcas y productos',                 when: 'No negociable para Wholesale',      inExpenses: 'Ya está arriba: pon su precio real en la tabla' },
+  { id: 'nepeto',        name: 'Nepeto',             purpose: 'Escáner de arbitraje online (tiene app)',       when: 'Fase de arbitraje online',          cost: null },
+  { id: 'analyzer',      name: 'Analyzer Tools',     purpose: 'Escanear listas de precios de proveedores',     when: 'Wholesale',                         cost: null },
+  { id: 'ipalert',       name: 'IP-Alert',           purpose: 'Saber qué productos o marcas puedes vender',    when: 'Recomendada antes de comprar',      cost: null },
+  { id: 'profitcyclops', name: 'Profit Cyclops',     purpose: 'Saber cuánto ganas de verdad',                  when: 'Desde el inicio',                   cost: 2,    costNote: '$2/mes hasta $5,000 en ventas al mes' },
+  { id: 'bqool',         name: 'BQool',              purpose: 'Repricer: cambia tus precios solo',             when: 'Cuando ya haya ventas',             cost: null },
+  { id: 'tactical',      name: 'Tactical Arbitrage', purpose: 'Suite: repricer, Inventory Lab y app Scout X',  when: 'Alternativa para ahorrar',          cost: 69,   costNote: '$69/mes' },
+  { id: 'sellersnap',    name: 'Seller Snap',        purpose: 'Repricer avanzado',                             when: 'Con $100k–$200k de ventas al mes',  cost: 500,  costNote: '~$500/mes' },
+  { id: 'selleramp',     name: 'SellerAMP',          purpose: 'App de escaneo en tienda física',               when: 'Arbitraje en tienda',               notApplicable: 'No aplica: operas desde Colombia' },
+];
+
 let opState = JSON.parse(localStorage.getItem('wlstonveil_ops_v1') || 'null') || {
   llcStatus: LLC_STATUS_LABELS.map(() => false),
   arbitrageDone: ARBITRAGE_STRATEGY_ITEMS.map(() => false),
@@ -1960,8 +2015,13 @@ let opState = JSON.parse(localStorage.getItem('wlstonveil_ops_v1') || 'null') ||
   currentPurchases: 0,
   opCosts: OP_COSTS_DEFAULT.map(r => ({ ...r })),
   govDone: GOV_RECURRING_ITEMS.map(() => false),
+  toolsRadar: {},
 };
 // Migraciones defensivas
+if (!opState.toolsRadar || typeof opState.toolsRadar !== 'object') opState.toolsRadar = {};
+TOOLS_RADAR.forEach(t => {
+  if (!opState.toolsRadar[t.id]) opState.toolsRadar[t.id] = { status: 'radar', cost: t.cost === undefined ? null : t.cost };
+});
 if (typeof opState.purchaseRoi !== 'number') opState.purchaseRoi = 30;
 if (typeof opState.purchaseCostPct !== 'number') opState.purchaseCostPct = 45;
 if (typeof opState.currentPurchases !== 'number') opState.currentPurchases = 0;
@@ -2086,6 +2146,74 @@ function setCurrentPurchases() {
   inp.value = '';
 }
 
+// ── Herramientas de software en el radar ──
+function contractedToolsTotal() {
+  return TOOLS_RADAR.reduce((sum, t) => {
+    const s = opState.toolsRadar[t.id];
+    return sum + (s && s.status === 'contratada' && s.cost > 0 ? s.cost : 0);
+  }, 0);
+}
+
+function renderToolsRadar() {
+  const el = document.getElementById('toolsRadarList');
+  if (!el) return;
+  el.innerHTML = TOOLS_RADAR.map(t => {
+    const s = opState.toolsRadar[t.id];
+    const meta = `${t.purpose} · ${t.when}`;
+    let ctrl;
+    if (t.inExpenses) {
+      ctrl = `<span class="tool-badge">En gastos mensuales</span>`;
+    } else if (t.notApplicable) {
+      ctrl = `<span class="tool-badge">No aplica</span>`;
+    } else {
+      const val = s.cost === null || s.cost === undefined ? '' : s.cost;
+      const ph = t.costNote ? t.costNote : 'precio por confirmar';
+      ctrl = `
+        <input class="cost-input tool-cost" type="number" min="0" step="0.01" value="${val}" placeholder="$/mes" title="${ph}"
+          onchange="setToolCost('${t.id}', this.value)" />
+        <select class="cost-input tool-status" onchange="setToolStatus('${t.id}', this.value)">
+          <option value="radar"${s.status === 'radar' ? ' selected' : ''}>En el radar</option>
+          <option value="contratada"${s.status === 'contratada' ? ' selected' : ''}>Contratada</option>
+          <option value="descartada"${s.status === 'descartada' ? ' selected' : ''}>Descartada</option>
+        </select>`;
+    }
+    const extra = t.inExpenses ? t.inExpenses : (t.notApplicable || (t.costNote ? `Precio del curso: ${t.costNote}` : ''));
+    return `<div class="tool-row${s.status === 'descartada' ? ' tool-off' : ''}">
+      <div class="tool-info">
+        <div class="tool-name">${t.name}</div>
+        <div class="tool-meta">${meta}</div>
+        ${extra ? `<div class="tool-meta tool-extra">${extra}</div>` : ''}
+      </div>
+      <div class="tool-ctrl">${ctrl}</div>
+    </div>`;
+  }).join('');
+
+  const contracted = contractedToolsTotal();
+  const pending = TOOLS_RADAR.filter(t => {
+    if (t.inExpenses || t.notApplicable) return false;
+    const s = opState.toolsRadar[t.id];
+    return s.status !== 'descartada' && (s.cost === null || s.cost === undefined);
+  }).length;
+  document.getElementById('toolsRadarSummary').innerHTML =
+    `<span>Contratadas: <strong>$${contracted.toFixed(2)}/mes</strong></span>` +
+    `<span>Sin precio confirmado: <strong>${pending}</strong></span>`;
+}
+
+function setToolStatus(id, status) {
+  opState.toolsRadar[id].status = status;
+  saveOps();
+  renderToolsRadar();
+  renderOpCosts();
+}
+
+function setToolCost(id, value) {
+  const n = parseFloat(value);
+  opState.toolsRadar[id].cost = (!isNaN(n) && n >= 0) ? n : null;
+  saveOps();
+  renderToolsRadar();
+  renderOpCosts();
+}
+
 // ── Gastos operativos mensuales ──
 function renderOpCosts() {
   const tbody = document.getElementById('opCostsBody');
@@ -2096,8 +2224,11 @@ function renderOpCosts() {
       <td><span class="op-cost-remove" onclick="removeOpCost(${i})" title="Eliminar">✕</span></td>
     </tr>`).join('');
 
-  const monthly = opState.opCosts.reduce((s, r) => s + (r.amount || 0), 0);
+  const toolsMonthly = contractedToolsTotal();
+  const monthly = opState.opCosts.reduce((s, r) => s + (r.amount || 0), 0) + toolsMonthly;
   const annual = monthly * 12;
+  document.getElementById('opCostsToolsLine').textContent =
+    toolsMonthly > 0 ? `Incluye $${toolsMonthly.toFixed(2)}/mes en herramientas contratadas (tarjeta de abajo)` : '';
   document.getElementById('opCostsMonthlyTotal').textContent = '$' + monthly.toFixed(2);
   document.getElementById('opCostsAnnualTotal').textContent = '$' + annual.toFixed(2);
   document.getElementById('opStatMonthly').textContent = '$' + monthly.toFixed(0);
@@ -2171,6 +2302,7 @@ function initOperacion() {
   renderArbitrageStrategy();
   renderGoal();
   renderPurchaseGoal();
+  renderToolsRadar();
   renderOpCosts();
   renderGovRecurring();
   renderSuppliersView();

@@ -147,6 +147,7 @@ Este archivo da contexto completo a Claude para continuar asistiendo con el proy
 - [x] **Decisión final:** LLC y RA con Bizee ($324 + $119/año desde año 2); BOI Report y Annual Report los hace Wilson mismo (gratis + $138.75/año respectivamente); TRP Accounting para Form 1120+5472 ($425/año, precio no garantizado) + contabilidad semestral ($225, frecuencia a confirmar)
 - [ ] Elegir proveedor de Prep Center en Florida
 - [ ] Elegir servicio de Virtual Mailbox para mes 2 en adelante
+- [ ] Herramientas de software del curso: ver la tarjeta "Herramientas de software — en el radar" en la pestaña Operación del roadmap. Contratar solo cuando se vaya a pagar, verificando antes el precio en el sitio oficial (los precios del curso no están verificados); SmartScout está en $0 como marcador en los gastos mensuales: falta su precio real
 - [ ] Registrar número de teléfono con Sonetel (probar plan gratis primero y confirmar que recibe el SMS de verificación de Amazon Seller Central antes de pagar Premium/Quo)
 
 ---
